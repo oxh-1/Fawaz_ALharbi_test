@@ -1,39 +1,54 @@
 <template>
-  <div class="modal-overlay">
-    <div class="modal">
-      <button class="close-button" @click="$emit('close')">×</button>
-      <h2>Add New Testimonial</h2>
+  <div :class="['modal-overlay', { dark: isDarkMode }]">
+    <div :class="['modal', { dark: isDarkMode }]">
+      <button class="close-button" @click="$emit('close')">
+        <div class="square"></div>
+        <div class="x"></div>
+      </button>
+      <h2 class="modal-title">{{ $t('addTestimonial.title') }}</h2>
       <form @submit.prevent="submitTestimonial">
         <div class="form-group">
-          <label>User Photo</label>
-          <div class="file-drop-area" @click="triggerFileInput">
-            <span class="file-message">Drop Your Image Here Or Browse</span>
-            <input type="file" ref="fileInput" @change="handleFileUpload" />
-            <p>Max Size 5 MB, 35*35 Pixel Supported Format .Jpg, .Png</p>
+          <label>{{ $t('addTestimonial.userPhoto') }}</label>
+          <div :class="['file-drop-area', { dark: isDarkMode }]">
+            <img src="@/assets/Gittax/download.png" alt="Gittax Logo" class="logo" />
+            <span class="file-message">{{ $t('addTestimonial.dropImage') }}</span>
+            <input type="file" @change="handleFileUpload" />
+            <p class="file-info">{{ $t('addTestimonial.maxSize') }}</p>
           </div>
         </div>
         <div class="form-group">
-          <label for="username">User Name</label>
+          <label for="username">{{ $t('addTestimonial.username') }}</label>
           <input type="text" id="username" v-model="username" required />
         </div>
         <div class="form-group">
-          <label for="companyName">Company Name</label>
+          <label for="companyName">{{ $t('addTestimonial.companyName') }}</label>
           <input type="text" id="companyName" v-model="companyName" required />
         </div>
         <div class="form-group">
-          <label for="content">Content</label>
-          <textarea id="content" v-model="content" maxlength="100" required></textarea>
-          <div class="character-count">{{ content.length }}/100</div>
+          <label for="content">{{ $t('addTestimonial.content') }}</label>
+          <div class="textarea-container">
+            <textarea id="content" v-model="content" maxlength="100" required></textarea>
+            <div class="character-count"><span class="count">{{ content.length }}</span>/100</div>
+          </div>
         </div>
-        <button type="submit" class="save-button">Save</button>
+        <button type="submit" class="save-button">{{ $t('addTestimonial.save') }}</button>
       </form>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   name: 'AddTestimonial',
+  props: {
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    },
+    isArabic: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       photo: null,
@@ -45,13 +60,8 @@ export default {
   methods: {
     handleFileUpload(event) {
       this.photo = event.target.files[0];
-      console.log(this.photo); // To check if the file is being uploaded
     },
     submitTestimonial() {
-      if (!this.photo) {
-        alert('Please select a photo');
-        return;
-      }
       const testimonial = {
         id: Date.now(),
         username: this.username,
@@ -60,14 +70,10 @@ export default {
         photo: this.photo
       };
       this.$emit('save', testimonial);
-    },
-    triggerFileInput() {
-      this.$refs.fileInput.click();
     }
   }
 };
 </script>
-
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -82,49 +88,129 @@ export default {
   z-index: 1000;
 }
 
+.modal-overlay.dark {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .modal {
   background-color: #2c2c2c;
   padding: 20px;
   border-radius: 10px;
-  width: 700px;
+  width: 40%;
+  height: 82%;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.modal.dark {
+  background-color: #1c1c1c;
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
+  top: 40px;
   right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
+  background: #cccccc;
+  border: 2px solid #000000; /* Black stroke */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  color: #fff;
 }
 
-h2 {
-  color: #fff;
-  text-align: center;
+.close-button .square {
+  width: 7px;
+  height: 7px;
+  border: 2px solid #000000;
+  background: transparent;
+  position: absolute;
+  top: 13px;
+  right: 13px;
+}
+
+.close-button .x {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button .x::before,
+.close-button .x::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background-color: #FFFFFF;
+}
+
+.close-button .x::before {
+  transform: rotate(45deg);
+}
+
+.close-button .x::after {
+  transform: rotate(-45deg);
+}
+
+.modal-title {
+  display: inline-block;
+  color: #cccccc;
+  text-shadow: 
+    2px 2px 0 #000000,   /* Right and down shadow */
+    -2px 2px 0 #000000,  /* Left and down shadow */
+    2px -2px 0 #000000,  /* Right and up shadow */
+    -2px -2px 0 #000000, /* Left and up shadow */
+    2px 0 0 #000000,     /* Right shadow */
+    -2px 0 0 #000000,    /* Left shadow */
+    0 2px 0 #000000,     /* Down shadow */
+    0 -2px 0 #000000;    /* Up shadow */
+  text-align: left;
   margin-bottom: 20px;
+  font-size: 24px;
+  width: calc(100% - 60px); /* Adjusted width to fit with the close button */
+  line-height: 40px; /* Match the close button height */
 }
 
 .form-group {
+  width: 90%;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .form-group label {
-  display: block;
   margin-bottom: 5px;
   color: #fff;
+  font-size: 16px;
 }
 
 .file-drop-area {
-  border: 2px dashed #666;
+  width: 93%;
+  height: 40%;
+  border: 0px dashed #fff;
+    background: url('@/assets/Gittax/cut.png') center center / cover no-repeat;
+
   padding: 20px;
   text-align: center;
   color: #fff;
   cursor: pointer;
   position: relative;
+  margin-bottom: 15px;
+}
+
+.file-drop-area.dark {
+  border: 1px dashed #888;
+  color: #888;
 }
 
 .file-drop-area input[type="file"] {
@@ -141,32 +227,79 @@ h2 {
   display: block;
   font-size: 14px;
   margin-bottom: 10px;
+  color: #FAFAFA;
+}
+
+.file-info {
+  font-size: 14px;
+  color: #FAFAFA;
+}
+
+.uploaded-photo {
+  width: 53px;
+  height: 53px;
+  border-radius: 50%;
+  margin: 0 auto;
 }
 
 .form-group input,
 .form-group textarea {
-  width: 80%;
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: none;
+  resize: none;
   border-radius: 5px;
-  background: #333;
+  background: #5f5f5f;
   color: #fff;
+}
+
+.form-group input.dark,
+.form-group textarea.dark {
+  background: #3f3f3f;
+  color: #ccc;
+}
+
+.textarea-container {
+  position: relative;
+  width: 100%;
+}
+
+.textarea-container textarea {
+  height: 150%;
 }
 
 .character-count {
   text-align: right;
   font-size: 0.875em;
-  color: #666;
+  color: #FFFFFF;
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
+
+.character-count .count {
+  color: #FEDD59;
+}
+
+form {
+  width: 100%;
 }
 
 .save-button {
-  width: 100%;
+  width: 13%;
+  text-align: center;
   padding: 10px;
-  background-color: #ffcc00;
+  background-color: #fedd59;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   color: #333;
   font-weight: bold;
+  margin-top: 15px; /* Add margin to create space between textarea and button */
+  margin-right:-480px;
+}
+
+.save-button.dark {
+  background-color: #ffdd59;
 }
 </style>

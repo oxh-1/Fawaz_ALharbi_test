@@ -5,49 +5,46 @@
         <img src="@/assets/Gittax/logo1.png" alt="Gittax Logo" class="logo" />
       </div>
       <nav class="navigation">
-        <router-link to="/errorpage" class="nav-item active">
+        <router-link to="/dashboard" class="nav-item active">
           <div class="icon-wrapper active-icon">
             <img src="@/assets/Gittax/Home.png" alt="Home Icon" class="nav-icon" />
           </div>
           <span class="active-text">{{ $t('notificationSettings.home') }}</span>
         </router-link>
-        <div class="nav-item aactive" @click="toggleDropdown">
-          <div class="icon-wrapper">
-            <img src="@/assets/Gittax/Invoicesandreports.png" alt="Invoices and Reports Icon" class="nav-icon" />
-          </div>
-          <span>{{ $t('notificationSettings.invoicesAndReports') }}</span>
-          <img src="@/assets/Gittax/Drop.png" alt="Dropdown Icon" class="dropdown-icon" />
+        <div v-if="userDropdownVisible" class="user-dropdown">
+          <router-link to="/profile">{{ $t('notificationSettings.profile') }}</router-link>
+          <button @click="logout">{{ $t('notificationSettings.logout') }}</button>
         </div>
         <div v-if="dropdownVisible" class="dropdown-menu">
           <router-link to="/errorpage" class="dropdown-item">{{ $t('notificationSettings.invoices') }}</router-link>
-          <router-link to="/errorpage" class="dropdown-item">{{ $t('notificationSettings.reports') }}</router-link>
+          <router-link to="/reports" class="dropdown-item">{{ $t('notificationSettings.reports') }}</router-link>
         </div>
-        <router-link to="/errorpage" class="nav-item aactive">
+        <router-link to="/errorpage" class="nav-item">
           <div class="icon-wrapper">
             <img src="@/assets/Gittax/Services.png" alt="Services Icon" class="nav-icon" />
           </div>
           <span>{{ $t('notificationSettings.servicesLink') }}</span>
         </router-link>
-        <router-link to="/errorpage" class="nav-item aactive">
+        <router-link to="/errorpage" class="nav-item">
           <div class="icon-wrapper">
             <img src="@/assets/Gittax/Videos.png" alt="Videos Icon" class="nav-icon" />
           </div>
           <span>{{ $t('notificationSettings.videos') }}</span>
         </router-link>
-        <router-link to="/errorpage" class="nav-item aactive">
+        <router-link to="/errorpage" class="nav-item">
           <div class="icon-wrapper">
             <img src="@/assets/Gittax/Affiliate.png" alt="Affiliate Icon" class="nav-icon" />
           </div>
           <span>{{ $t('notificationSettings.affiliate') }}</span>
         </router-link>
-        <router-link to="/errorpage" class="nav-item aactive">
+        <router-link to="/errorpage" class="nav-item">
           <div class="icon-wrapper">
             <img src="@/assets/Gittax/Contact.png" alt="Contact Icon" class="nav-icon" />
           </div>
           <span>{{ $t('notificationSettings.contactUs') }}</span>
           <span class="badge">10+</span>
         </router-link>
-        <router-link to="/errorpage" class="nav-item aactive">
+        <router-link to="/errorpage" class="nav-item">
           <div class="icon-wrapper">
             <img src="@/assets/Gittax/Permission.png" alt="Permissions Icon" class="nav-icon" />
           </div>
@@ -84,29 +81,28 @@
             <span>{{ username }}</span>
             <img src="@/assets/Gittax/Drop.png" alt="Dropdown Icon" class="dropdown-icon" @click="toggleUserDropdown" />
             <div v-if="userDropdownVisible" class="user-dropdown">
-              <router-link to="/errorpage">{{ $t('notificationSettings.profile') }}</router-link>
-              <button @click="logout" class="dropdown-link">{{ $t('dashboard.logout') }}</button>
+              <router-link to="/profile">{{ $t('notificationSettings.profile') }}</router-link>
+              <button @click="logout">{{ $t('dashboard.logout') }}</button>
             </div>
           </div>
           <p><br></p>
         </div>
       </header>
 
-      <section class="notification-settings">
+       <section class="notification-settings">
         <div v-if="isSystemNotificationOn" class="report-cards">
           <div :class="['report-card', { dark: isDarkMode }]" v-for="report in reports" :key="report.id">
+            <input type="checkbox" v-model="report.selected" />
             <div class="report-content">
-              <input type="checkbox" v-model="report.selected" @change="toggleReportSelection(report.id)" />
               <h3>{{ report.title }}</h3>
+              <p>{{ report.description }}</p>
             </div>
-            <p>{{ report.description }}</p>
           </div>
         </div>
-
         <div v-else>
           <div class="notification-item" v-for="notification in notifications" :key="notification.id">
             <label class="switch">
-              <input type="checkbox" v-model="notification.enabled" @change="checkSystemNotification" />
+              <input type="checkbox" v-model="notification.enabled" />
               <span class="slider"></span>
             </label>
             <div class="notification-text">
@@ -119,9 +115,10 @@
       <AddTestimonial v-if="showTestimonialPopup" @close="showTestimonialPopup = false" @save="saveTestimonial" />
       <section class="testimonials">
         <div class="testimonial-item" v-for="testimonial in testimonials" :key="testimonial.id">
-          <h3>User Name: {{ testimonial.username }}</h3>
-          <p>Company Name: {{ testimonial.companyName }}</p>
-          <p>Content: {{ testimonial.content }}</p>
+          
+          <h3>User Name : {{ testimonial.username }}</h3>
+          <p>company Name :{{ testimonial.companyName }}</p>
+          <p>content : {{ testimonial.content }}</p>
         </div>
       </section>
     </main>
@@ -131,7 +128,6 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import AddTestimonial from './AddTestimonial.vue';
-import '@/assets/styles/NotificationSettings.css'; // Import the new CSS file
 
 export default {
   name: 'NotificationSettings',
@@ -146,7 +142,7 @@ export default {
       dropdownVisible: false,
       userDropdownVisible: false,
       testimonials: [],
-      isSystemNotificationOn: false,
+      isSystemNotificationOn: false, // Initialize as false
       notifications: [
         { id: 1, title: this.$t('notificationSettings.systemNotification'), description: this.$t('notificationSettings.systemNotificationDesc'), enabled: false },
         { id: 2, title: this.$t('notificationSettings.billingCreated'), description: this.$t('notificationSettings.billingCreatedDesc'), enabled: true },
@@ -168,7 +164,7 @@ export default {
     if (loggedInUser && loggedInUser.username) {
       this.username = loggedInUser.username;
     }
-    this.checkSystemNotification();
+    this.isSystemNotificationOn = this.notifications.find(notification => notification.id === 1).enabled;
   },
   computed: {
     ...mapState(['isDarkMode'])
@@ -193,28 +189,380 @@ export default {
     logout() {
       localStorage.removeItem('loggedInUser');
       this.$router.push('/login');
-    },
-    checkSystemNotification() {
-      this.isSystemNotificationOn = this.notifications.find(notification => notification.id === 1).enabled;
-    },
-    toggleReportSelection(reportId) {
-      const report = this.reports.find(r => r.id === reportId);
-      if (report) {
-        report.selected = !report.selected;
-        if (!report.selected) {
-          this.isSystemNotificationOn = false;
-        }
-      }
     }
   },
   watch: {
     notifications: {
-      handler() {
-        this.checkSystemNotification();
+      handler(newValue) {
+        this.isSystemNotificationOn = newValue.find(notification => notification.id === 1).enabled;
       },
       deep: true
     }
   }
 };
 </script>
+<style scoped>.notification-settings-container {
+  display: flex;
+  height: 100vh;
+  background-color: white;
+  color: #000;
+}
 
+.notification-settings-container.dark {
+  background-color: #424242;
+  color: #fff;
+}
+
+.sidebar {
+  width: 20%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sidebar.dark {
+  background-color: #424242;
+  color: #fff;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.navigation {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  color: inherit;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.icon-wrapper {
+      margin-left: 5px;
+
+      border-radius: 10px;
+
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item.active .icon-wrapper {
+  background-color: #FEDD59;
+  
+}
+
+.nav-item.active .active-text {
+    margin-right: 20px;
+  color: #FEDD59;
+  cursor: pointer;
+}
+
+.nav-item:hover, .nav-item.router-link-active {
+  background-color: #ddd;
+  border-left: 4px solid #00aaff;
+  margin-right: 20px;
+}
+
+.nav-item.dark:hover, .nav-item.router-link-active.dark {
+  background-color: #424242;
+  border-left: 4px solid #ffcc00;
+    margin-right: 20px;
+
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.dropdown {
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  margin-left: auto;
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #ddd;
+}
+
+.settings {
+  width: 100%;
+  margin-top: auto;
+}
+
+.language-toggle, .mode-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.download-button {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #FEDD59;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600; /* Semi-bold */
+  letter-spacing: 0.7px;
+  line-height: 14px;
+}
+
+.content {
+  width: 80%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.left-header {
+  display: flex;
+  align-items: center;
+}
+
+.right-header {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.notification-icon {
+  width: 38px;
+  height: 40px;
+  margin-right: 30px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right : 50px;
+
+}
+
+.avatar {
+margin-right : 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.dropdown-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  z-index: 1000;
+}
+
+.user-dropdown a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.user-dropdown a:hover {
+  background-color: #424242;
+}
+
+.notification-settings {
+  flex: 1;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notification-text {
+  margin-left: 20px;
+  margin-top: 14px;
+}
+
+.notification-text h3 {
+  margin: 5px;
+  font-size: 16px;
+}
+
+.notification-text p {
+  margin: 5px 0 0;
+  color: #bbb;
+  font-size: 12px;
+}
+
+.testimonials {
+  margin-top: 20px;
+}
+
+.testimonial-item {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Custom switch styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 31px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 23px;
+  width: 23px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #6C5ECF;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Badge style */
+.badge {
+  background-color: #ff5722;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin-left: 10px;
+}
+
+/* Report card styles */
+.report-cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.report-card {
+  width: 30%;
+  background-color: #fff;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.report-card.dark {
+  background-color: #444;
+}
+
+.report-card input {
+  margin-right: 10px;
+}
+
+.report-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-content h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.report-content p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.report-content p.dark {
+  color: #bbb;
+}
+
+</style>

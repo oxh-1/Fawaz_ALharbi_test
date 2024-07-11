@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     goToDashboard() {
-      this.$router.push('/dashboard');
+      this.$router.push('/notification-settings');
     }
   }
 };

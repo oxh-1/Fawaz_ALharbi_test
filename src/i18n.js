@@ -14,8 +14,10 @@ const messages = {
       loginButton: 'Log In',
       forgotPassword: 'Forgot Password?',
       googleLogin: 'Log In With Google',
-      backHome: 'Back To Home Page'
+      backHome: 'Back To Home Page',
+      language:'English',
     },
+    
     signup: {
       title: 'Sign Up',
       haveAccount: 'Already have an account?',
@@ -27,19 +29,21 @@ const messages = {
       signUpButton: 'Sign Up',
       backHome: 'Back To Home Page'
     },
+    
     notificationSettings: {
-      home: 'Home',
-      invoicesReports: 'Invoices And Reports',
-      servicesLink: 'Services Link',
-      videos: 'Videos',
-      affiliate: 'Affiliate',
-      contactUs: 'Contact Us',
-      permissions: 'Permissions',
+      home: '  Home',
+      invoicesReports: '  Invoices And Reports',
+      servicesLink: '  Services Link',
+      videos: '  Videos',
+      affiliate: '  Affiliate',
+      contactUs: '  Contact Us',
+      permissions: '  Permissions',
       language: 'Language : ',
       nightMode: 'Night mode',
       downloadApps: 'DOWNLOAD APPS',
       notificationSetting: 'Notification Setting',
       addTestimonial: 'Add New Testimonial',
+      invoicesAndReports:'invoices And Reports',
       systemNotification: 'System Notification',
       systemNotificationDesc: 'All Notifications Sending By GitTax Team.',
       billingCreated: 'Billing Created',
@@ -53,6 +57,7 @@ const messages = {
       categories: 'Categories',
       booking: 'Booking',
       pricing: 'Pricing',
+      invoices:'invoices',
       ads: 'Ads',
       content: 'Content',
       settlement: 'Settlement',
@@ -63,6 +68,16 @@ const messages = {
       profile:'profile'
 
     },
+    addTestimonial: {
+        title: "Add New Testimonial",
+        userPhoto: "User Photo",
+        dropImage: "Drop Your Image Here Or Browse",
+        maxSize: "Max Size 5 MB , 35*35 Pixel Supported Format .Jpg, .Png",
+        username: "User Name",
+        companyName: "Company Name",
+        content: "Content",
+        save: "Save"
+      },
     reports: {
       title: 'Reports',
       selectTime: 'Select Time:',
@@ -89,6 +104,7 @@ const messages = {
         welcome: 'Welcome',
         notificationSettings: 'Notification Settings',
         reports: 'Reports',
+        logout:'logout',
       },
   },
   ar: {
@@ -97,6 +113,7 @@ const messages = {
         welcome: 'أهلا بك',
         notificationSettings: 'إعدادات الإشعارات',
         reports: 'التقارير',
+        logout:'تسجيل الخروج',
       },
     login: {
       title: 'تسجيل الدخول',
@@ -107,8 +124,19 @@ const messages = {
       loginButton: 'تسجيل الدخول',
       forgotPassword: 'هل نسيت كلمة السر؟',
       googleLogin: 'تسجيل الدخول باستخدام جوجل',
-      backHome: 'العودة إلى الصفحة الرئيسية'
+      backHome: 'العودة إلى الصفحة الرئيسية',
+      language:'اللغة العربية',
     },
+    addTestimonial: {
+        title: "إضافة شهادة جديدة",
+        userPhoto: "صورة المستخدم",
+        dropImage: "قم بإسقاط صورتك هنا أو تصفح",
+        maxSize: "الحجم الأقصى 5 ميجا بايت ، 35*35 بكسل ، التنسيق المدعوم .Jpg, .Png",
+        username: "اسم المستخدم",
+        companyName: "اسم الشركة",
+        content: "المحتوى",
+        save: "حفظ"
+      },
     signup: {
       title: 'اشتراك',
       haveAccount: 'هل لديك حساب؟',
@@ -122,6 +150,8 @@ const messages = {
     },
     notificationSettings: {
       home: 'الصفحة الرئيسية',
+      invoicesAndReports:'الفواتير والتقارير',
+      invoices:'الفواتير',
       invoicesReports: 'الفواتير والتقارير',
       servicesLink: 'رابط الخدمات',
       videos: 'مقاطع فيديو',
