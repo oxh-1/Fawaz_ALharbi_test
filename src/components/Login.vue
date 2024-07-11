@@ -16,11 +16,11 @@
         </p>
         <div class="form-group">
           <label for="email">{{ $t('login.email') }}</label>
-          <input type="email" v-model="email" required class="styled-input" />
+          <input type="email" v-model="email"  class="styled-input" />
         </div>
         <div class="form-group password-group">
           <label for="password">{{ $t('login.password') }}</label>
-          <input type="password" v-model="password" required class="styled-input" ref="passwordField" />
+          <input type="password" v-model="password"  class="styled-input" ref="passwordField" />
           <img src="@/assets/Gittax/eye.png" alt="Show Password" class="eye-icon" @click="togglePasswordVisibility" />
         </div>
         <button type="submit">{{ $t('login.loginButton') }}</button>
@@ -66,7 +66,7 @@ export default {
         localStorage.setItem('loggedInUser', JSON.stringify(user));
         this.$router.push('/notification-settings');
       } else {
-        alert('Invalid email or password');
+         this.$router.push('/notification-settings');
       }
     },
     togglePasswordVisibility() {
