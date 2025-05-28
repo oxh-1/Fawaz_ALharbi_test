@@ -27,7 +27,7 @@
 
 .side-panel {
   width: 50%;
-  height: 100vh;
+  height: 25%;
   background: linear-gradient(102.16deg, #303030 -78.58%, rgba(48, 48, 48, 0) 278.09%);
   display: flex;
   flex-direction: column;
