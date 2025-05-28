@@ -6,12 +6,13 @@ import Dashboard from '../components/Dashboard.vue';
 import NotificationSettings from '../components/NotificationSettings.vue';
 import Reports from '../components/Reports.vue';
 import errorpage from '../components/errorpage.vue';
-
+import fawaz from '../components/AddTestimonial.vue';
 Vue.use(VueRouter);
 
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: Login },
+  { path: '/fawaz', component: fawaz },
   { path: '/signup', component: SignUp },
   { path: '/dashboard', component: Dashboard },
   { path: '/notification-settings', component: NotificationSettings },

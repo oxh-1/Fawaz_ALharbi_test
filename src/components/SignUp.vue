@@ -15,19 +15,19 @@
           <router-link to="/login" class="login-link">{{ $t('signup.login') }}</router-link>
         </p>
         <div class="form-group">
-          <label for="username">{{ $t('signup.username') }}</label>
+          <h3 for="username">{{ $t('signup.username') }}</h3>
           <input type="text" v-model="username" required class="styled-input" />
         </div>
         <div class="form-group">
-          <label for="email">{{ $t('signup.email') }}</label>
+          <h3 for="email">{{ $t('signup.email') }}</h3>
           <input type="email" v-model="email" required class="styled-input" />
         </div>
         <div class="form-group">
-          <label for="password">{{ $t('signup.password') }}</label>
+          <h3 for="password">{{ $t('signup.password') }}</h3>
           <input type="password" v-model="password" required class="styled-input" />
         </div>
         <div class="form-group">
-          <label for="confirmPassword">{{ $t('signup.confirmPassword') }}</label>
+          <h3 for="confirmPassword">{{ $t('signup.confirmPassword') }}</h3>
           <input type="password" v-model="confirmPassword" required class="styled-input" />
         </div>
         <button type="submit">{{ $t('signup.signUpButton') }}</button>

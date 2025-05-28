@@ -16,6 +16,7 @@
   font-size: 18px;
 }
 
+
 .language-switcher button {
   background: none;
   border: none;
@@ -35,8 +36,8 @@
 }
 
 .side-panel img {
-  width: 80px;
-  height: 80px;
+  width:  50%;
+  height: 15%;
   margin-bottom: 20px;
 }
 
@@ -50,8 +51,40 @@
   box-sizing: border-box;
 }
 
+.logo-img {
+  width: 350px; /* Adjust size as needed */
+  height: auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto 10px;
+}
 form {
   width: 60%;
+}
+/* Default (light mode) */
+.back-home {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Dark mode */
+.signup-container.dark .back-home,.signup-container.dark .have-account, .signup-container.dark .login-link{
+color: white;
+}
+
+/* Hover effect (optional but recommended) */
+.back-home:hover {
+  text-decoration: underline;
+}
+
+/* Style for the back icon (optional enhancements) */
+.back-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
 }
 
 h2.signup-title {
@@ -60,7 +93,6 @@ h2.signup-title {
   width: 100%;
   font-size: 26px;
   font-weight: 600;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 p.have-account {
@@ -69,12 +101,11 @@ p.have-account {
   width: 100%;
   font-size: 16px;
   color: #6C6C6C;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .login-link {
   color: black;
-  text-decoration: underline;
+  text-decoration:NONE;
   text-decoration-color: black;
   font-weight: 500;
 }
@@ -86,31 +117,31 @@ p.have-account {
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  text-align: left;
+  text-align: center;
   font-size: 18px;
   font-weight: 500;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  font-family:Arial, Helvetica, sans-serif;
+color: #2c3e50;
 }
 
 .styled-input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s;
+
+   border-radius: 4px;
+    padding: 8px;
+    border: 1px solid #ccc;
 }
 
 .styled-input:focus {
   outline: none;
-  border-color: #ffcc00;
+  border-color: #275559;
 }
 
 button[type="submit"] {
-  width: 100%;
+  width: 105%;
   padding: 10px;
-  background-color: #ffcc00;
-  border: 1px solid #ffcc00;
+  background-color: #275559;
+  border: 1px solid #275559;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 15px;
@@ -123,7 +154,6 @@ button[type="submit"] {
   margin-top: 10px;
   color: #6C6C6C;
   text-decoration: none;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .back-home .back-icon {

@@ -1,25 +1,23 @@
 <template>
   <div :class="['login-container', { dark: isDarkMode }]">
-    <div class="language-switcher">
-      <button @click="switchLanguage">{{ nextLanguage }}</button>
-    </div>
+    
     <div class="side-panel">
-      <img src="@/assets/Gittax/logo1.png" alt="Gittax Logo" class="logo" />
-      <h1>Gittax</h1>
+      <img src="@/assets/Gittax/logo1.png"  class="logo-img"  />
+      <h1>FAWAZ Platform</h1>
     </div>
     <div class="form-container">
       <form @submit.prevent="login">
         <h2 class="login-title">{{ $t('login.title') }}</h2>
-        <p class="no-account">
+        <h4 class="no-account">
           {{ $t('login.noAccount') }}
-          <router-link to="/signup" class="signup-link">{{ $t('login.signUp') }}</router-link>
-        </p>
+          <router-link  to="/signup" class="signup-link">{{ $t('login.signUp') }}</router-link>
+        </h4>
         <div class="form-group">
-          <label for="email">{{ $t('login.email') }}</label>
+          <h3 for="email">{{ $t('login.email') }}</h3>
           <input type="email" v-model="email"  class="styled-input" />
         </div>
         <div class="form-group password-group">
-          <label for="password">{{ $t('login.password') }}</label>
+          <h3 for="password">{{ $t('login.password') }}</h3>
           <input type="password" v-model="password"  class="styled-input" ref="passwordField" />
           <img src="@/assets/Gittax/eye.png" alt="Show Password" class="eye-icon" @click="togglePasswordVisibility" />
         </div>
@@ -29,10 +27,13 @@
           <img src="@/assets/Gittax/google.png" alt="Google Logo" class="google-icon" />
           {{ $t('login.googleLogin') }}
         </button>
-        <router-link to="/" class="back-home">
+        <router-link  to="/" class="back-home">
           <img src="@/assets/Gittax/back.png" alt="Back Icon" class="back-icon" />
           {{ $t('login.backHome') }}
         </router-link>
+    <div class="language-switcher">
+      <button @click="switchLanguage">{{ nextLanguage }}</button>
+    </div>
       </form>
     </div>
   </div>
@@ -78,6 +79,13 @@ export default {
       const newLocale = this.locale === 'en' ? 'ar' : 'en';
       this.setLocale(newLocale);
       i18n.locale = newLocale;
+
+    
+      
+      i18n.locale = newLocale;
+      this.isArabic = !this.isArabic;
+    
+
     }
   }
 };
