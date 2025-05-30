@@ -17,10 +17,32 @@
           <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
         </div>
       </div>
-      <div class="company-card" @click="navigateTo('reports')">
-        <img src="@/assets/L3bnaIMG/L3bnaLogo.png" alt="Company L3bny Logo" class="company-logo" />
+          <div class="company-card" @click="navigateTo('notification-settings')">
+        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
         <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Company L3bny</h3>
+          <h3>Company G</h3>
+          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
+        </div>
+      </div>
+          <div class="company-card" @click="navigateTo('notification-settings')">
+        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>Company G</h3>
+          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
+        </div>
+      </div>
+          <div class="company-card" @click="navigateTo('notification-settings')">
+        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>Company G</h3>
+          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
+        </div>
+      </div>
+      
+      <div class="company-card" @click="navigateTo('reports')">
+        <img src="@/assets/Gittax/logo1.png" alt="Company L3bny Logo" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>Company 2</h3>
           <router-link to="/reports">{{ $t('dashboard.reports') }}</router-link>
         </div>
       </div>

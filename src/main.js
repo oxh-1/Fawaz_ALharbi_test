@@ -17,13 +17,13 @@ new Vue({
 // Update i18n locale based on Vuex state
 i18n.locale = store.state.locale;
 
-// Watch for changes in Vuex state and update i18n locale
 store.watch(
   (state) => state.locale,
   (locale) => {
     i18n.locale = locale;
   }
 );
+
 
 // Apply dark mode based on Vuex state
 document.body.classList.toggle('dark-mode', store.state.isDarkMode);

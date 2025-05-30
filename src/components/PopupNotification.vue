@@ -1,10 +1,10 @@
 <template>
   <div class="popup-overlay" v-if="showPopup">
     <div class="popup">
-      <p>{{ message }}</p>
+      <p>{{ $t('popup.message') }}</p>
       <div class="popup-actions">
-        <button @click="accept">{{ acceptText }}</button>
-        <button @click="reject">{{ rejectText }}</button>
+        <button @click="accept">{{ $t('popup.accept') }}</button>
+        <button @click="reject">{{ $t('popup.reject') }}</button>
       </div>
     </div>
   </div>
@@ -13,20 +13,6 @@
 <script>
 export default {
   name: 'PopupNotification',
-  props: {
-    message: {
-      type: String,
-      default: 'Do you accept the terms and conditions?'
-    },
-    acceptText: {
-      type: String,
-      default: 'Accept'
-    },
-    rejectText: {
-      type: String,
-      default: 'Reject'
-    }
-  },
   data() {
     return {
       showPopup: true
@@ -36,7 +22,12 @@ export default {
     accept() {
       this.showPopup = false;
       this.$emit('accept');
-    },
+    }
+    ,  computed: {
+    popupDirection() {
+      return this.$i18n.locale === 'ar' ? 'popup-rtl' : 'popup-ltr';
+    }
+  },
     reject() {
       this.showPopup = false;
       this.$emit('reject');
@@ -62,13 +53,27 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+}
+  
+/* Align buttons based on locale */
+.popup-ltr .popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.popup-rtl .popup-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 10px;
 }
 
 .popup-actions button {
-  background-color: #ffcc00;
+  background-color: #275559;
   border: none;
-  color: #333;
-  padding: 5px 10px;
+  color: #fff;
+  padding: 8px 16px;
   margin-left: 10px;
   cursor: pointer;
   border-radius: 4px;

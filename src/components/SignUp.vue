@@ -5,7 +5,7 @@
     </div>
     <div class="side-panel">
       <img src="@/assets/Gittax/logo1.png" alt="Gittax Logo" class="logo" />
-      <h1>Gittax</h1>
+      <h1>FAWAZ Platform</h1>
     </div>
     <div class="form-container">
       <form @submit.prevent="signUp">

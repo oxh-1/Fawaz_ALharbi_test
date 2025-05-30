@@ -32,8 +32,17 @@
           {{ $t('login.backHome') }}
         </router-link>
     <div class="language-switcher">
-      <button @click="switchLanguage">{{ nextLanguage }}</button>
+      <button type="button" @click="switchLanguage">{{ nextLanguage }}</button>
     </div>
+    <PopupNotification
+  v-if="showPopup"
+  :message="'Do you accept the terms and conditions?'"
+  :acceptText="'Accept'"
+  :rejectText="'Reject'"
+  @accept="handleAccept"
+  @reject="handleReject"
+/>
+
       </form>
     </div>
   </div>
@@ -42,14 +51,23 @@
 import { mapState, mapActions } from 'vuex';
 import { i18n } from '@/i18n'; // Adjust this import according to your project structure
 import '@/assets/styles/LoginPage.css'; // Import the new CSS file
+import PopupNotification from '../components/PopupNotification.vue';
+
+
 
 export default {
   name: 'LoginPage',
+    components: {
+    PopupNotification
+  },
   data() {
     return {
       email: '',
       password: '',
+      showPopup: true,
+
       showPassword: false
+      
     };
   },
   computed: {

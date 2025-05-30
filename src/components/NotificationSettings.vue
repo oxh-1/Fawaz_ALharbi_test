@@ -175,11 +175,9 @@ export default {
   },
   methods: {
     ...mapActions(['toggleDarkMode']),
-    toggleLanguage() {
-      const newLocale = this.isArabic ? 'en' : 'ar';
-      this.$i18n.locale = newLocale;
-      this.isArabic = !this.isArabic;
-    },
+toggleLanguage() {
+  this.$i18n.locale = this.isArabic ? 'ar' : 'en';
+},
     toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
     },

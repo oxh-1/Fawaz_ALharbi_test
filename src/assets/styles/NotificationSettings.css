@@ -67,7 +67,7 @@
 }
 
 .nav-item.active .icon-wrapper {
-  background-color: #FEDD59;
+  background-color: #275559;
 }
 
 .nav-item.aactive .icon-wrapper {
@@ -76,7 +76,7 @@
 
 .nav-item.active .active-text {
   margin-right: 20px;
-  color: #FEDD59;
+  color: #275559;
   cursor: pointer;
 }
 
@@ -91,7 +91,7 @@
 
 .nav-item.dark:hover, .nav-item.router-link-active.dark {
   background-color: #424242;
-  border-left: 4px solid #ffcc00;
+  border-left: 4px solid #275559;
   margin-right: 20px;
 }
 
@@ -141,7 +141,7 @@
 .download-button {
   width: 100%;
   padding: 10px 20px;
-  background-color: #FEDD59;
+  background-color: #275559;
   border: none;
   color: #333;
   cursor: pointer;

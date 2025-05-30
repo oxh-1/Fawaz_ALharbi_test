@@ -2,8 +2,8 @@
   <div :class="['reports-container', { dark: isDarkMode }]">
     <aside :class="['sidebar', { dark: isDarkMode }]">
       <div class="logo-section">
-        <img src="@/assets/L3bnaIMG/L3bnaLogo.png" alt="Logo" class="logo" />
-        <h1>L3bna</h1>
+        <img src="@/assets/Gittax/logo1.png" alt="Logo" class="logo" />
+        <h1>Company2</h1>
       </div>
       <nav class="navigation">
         <router-link to="/dashboard">          <img src="@/assets/L3bnaIMG/homeL3.png" alt="Home Icon" class="nav-icon" />
@@ -76,6 +76,7 @@
       </section>
     </main>
   </div>
+  
 </template>
 
 <script>

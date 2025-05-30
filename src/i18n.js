@@ -5,6 +5,14 @@ Vue.use(VueI18n);
 
 const messages = {
   en: {
+    
+  popup: {
+    "message": "Do you accept the terms and conditions?",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
+
+
     login: {
       title: 'Log In',
       noAccount: "Don't Have An Account?",
@@ -108,6 +116,13 @@ const messages = {
       },
   },
   ar: {
+    
+  popup: {
+    "message": "هل تقبل الشروط والأحكام؟",
+    "accept": "موافق",
+    "reject": "رفض"
+  },
+
     dashboard: {
         title: 'لوحة القيادة',
         welcome: 'أهلا بك',
