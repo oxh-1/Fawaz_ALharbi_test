@@ -143,11 +143,11 @@
   padding: 10px 20px;
   background-color: #275559;
   border: none;
-  color: #333;
+  color: #ffff;
   cursor: pointer;
   border-radius: 10px;
   font-size: 18px;
-  font-weight: 600; /* Semi-bold */
+   /* Semi-bold */
   letter-spacing: 0.7px;
   line-height: 14px;
 }

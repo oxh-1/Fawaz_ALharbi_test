@@ -3,7 +3,7 @@
     
     <div class="side-panel">
       <img src="@/assets/Gittax/logo1.png"  class="logo-img"  />
-      <h1>FAWAZ Platform</h1>
+      <h1>Fawaz Platform</h1>
     </div>
     <div class="form-container">
       <form @submit.prevent="login">

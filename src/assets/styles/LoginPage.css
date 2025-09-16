@@ -78,8 +78,8 @@
   .signup-link {
     color: black;
     text-decoration: none;
-    font-weight: 500;
-        font-size: 22px;
+    font-weight: 700;
+    font-size: 18px;
 
   }
 
@@ -123,6 +123,7 @@
     width: 100%;
     padding: 10px;
     background-color: #275559;
+    
     border: 1px solid #275559;
     border-radius: 4px;
     cursor: pointer;
