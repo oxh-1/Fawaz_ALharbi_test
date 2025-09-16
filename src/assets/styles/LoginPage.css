@@ -31,10 +31,7 @@
     font-size: 18px;
   }
   
-  .side-panel {
-   
-  }
-  
+
 .logo-img {
   width: 350px; /* Adjust size as needed */
   height: auto;
@@ -82,12 +79,19 @@
     color: black;
     text-decoration: none;
     font-weight: 500;
+        font-size: 22px;
+
   }
 
   .form-group {
     margin-bottom: 15px;
+        width: 100%;
+ border: 1px
   }
-  
+  .form-group.password-group {
+    width: 100%;
+    position: relative;
+  }
   .form-group label {
     display: block;
     margin-bottom: 5px;
@@ -100,6 +104,8 @@
   
 
   .password-group {
+    
+    
     position: relative;
   }
   
@@ -155,7 +161,7 @@
     text-align: center;
     margin-bottom: 25px;
     color: black;
-    font-size: 16px;
+    font-size: 18px;
     
   }
   
@@ -165,6 +171,8 @@
     margin-top: 10px;
     color: #6C6C6C;
     text-decoration: none;
+        font-size: 18px;
+
     }
   
   .back-home .back-icon {

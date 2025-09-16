@@ -112,6 +112,7 @@ p.have-account {
 
 .form-group {
   margin-bottom: 15px;
+  
 }
 
 .form-group label {
@@ -120,6 +121,8 @@ p.have-account {
   text-align: center;
   font-size: 18px;
   font-weight: 500;
+
+
   font-family:Arial, Helvetica, sans-serif;
 color: #2c3e50;
 }
@@ -138,7 +141,7 @@ color: #2c3e50;
 }
 
 button[type="submit"] {
-  width: 105%;
+  width: 100%;
   padding: 10px;
   background-color: #275559;
   border: 1px solid #275559;
