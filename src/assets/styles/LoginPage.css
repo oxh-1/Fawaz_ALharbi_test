@@ -1,3 +1,15 @@
+/* Responsive base font-size (percentages) */
+:root {
+  font-size: 100%; /* 16px baseline */
+}
+
+@media (max-width: 480px) {
+  :root { font-size: 90%; }  /* ~14.4px */
+}
+@media (min-width: 1200px) {
+  :root { font-size: 110%; } /* ~17.6px */
+}
+
 .login-container {
     display: flex;
     height: 100vh;
@@ -15,7 +27,7 @@
     position: relative;
     right: 30px; /* Adjust as needed */
     top: 30px; /* Adjust as needed */
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
   }
   .login-container.signup-link,
 .login-container .forgot-password,
@@ -32,21 +44,25 @@
   }
   
 
+/* responsive main logo and side image */
 .logo-img {
-  width: 350px; /* Adjust size as needed */
+  width: clamp(140px, 30vw, 350px); /* replace fixed 350px */
   height: auto;
   max-width: 100%;
   display: block;
   margin: 0 auto 10px;
 }
-  .side-panel img {
-    width:  200px;
-    height: 200px;
-    margin-bottom: 20px;
-  }
-  
-  .form-container {
-    width: 50%;
+.side-panel img {
+  width: clamp(80px, 18vw, 200px);
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* fluid form container */
+.form-container {
+  width: 50%;
+  max-width: 720px;
+  flex: 1 1 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,14 +72,14 @@
   }
   
   form {
-    width: 60%;
+    width: min(640px, 60%);
   }
   
   h2.login-title {
     margin-bottom: 10px;
     text-align: center;
     width: 100%;
-    font-size: 26px;
+    font-size: 162.5%; /* was 26px */
     font-weight: 600;
     }
   
@@ -71,15 +87,17 @@
     margin-bottom: 20px;
     text-align: left;
     width: 100%;
-    font-size: 16px;
+    font-size: 100%; /* was 16px */
     color: #6C6C6C;
     }
-  
+  h1, h2 {
+  cursor: default;
+}
   .signup-link {
     color: black;
     text-decoration: none;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
 
   }
 
@@ -96,7 +114,7 @@
     display: block;
     margin-bottom: 5px;
     text-align: left;
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
     font-weight: 500;
    
    
@@ -109,7 +127,34 @@
     position: relative;
   }
   
-  .eye-icon {
+/* //////////////////// */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.styled-input {
+  width: 100%;
+  padding-right: 2.5rem; /* space for eye icon, keeps relative */
+  box-sizing: border-box;
+  font-size: 112.5%;
+  padding: 0.625rem;
+}
+
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.625rem; /* 10px -> rem */
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  /* .eye-icon {
     position: absolute;
     right: 0px;
     top: 75%;
@@ -118,7 +163,7 @@
     height: 20px;
     cursor: pointer;
   }
-  
+   */
   button[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -128,7 +173,7 @@
     border-radius: 4px;
     cursor: pointer;
     margin-bottom: 15px;
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
   }
   
   button.google-login {
@@ -143,7 +188,7 @@
     align-items: center;
     justify-content: center;
     transition: border-color 0.3s;
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
   }
   
   button.google-login:hover {
@@ -162,7 +207,7 @@
     text-align: center;
     margin-bottom: 25px;
     color: black;
-    font-size: 18px;
+    font-size: 112.5%; /* was 18px */
     
   }
   
@@ -172,7 +217,7 @@
     margin-top: 10px;
     color: #6C6C6C;
     text-decoration: none;
-        font-size: 18px;
+        font-size: 112.5%; /* was 18px */
 
     }
   
@@ -183,5 +228,22 @@
     color: rgb(221, 22, 22);
     top: 0px; /* Move the icon down by 3px */
   }
-  
-  
+
+/* stack layout on smaller screens */
+@media (max-width: 900px) {
+  .login-container {
+    flex-direction: column;
+  }
+  .side-panel {
+    width: 100%;
+    padding: 24px 16px;
+  }
+  .form-container {
+    width: 100%;
+    padding: 20px 16px;
+  }
+  form {
+    width: 100%;
+  }
+}
+

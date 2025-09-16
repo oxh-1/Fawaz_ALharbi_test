@@ -18,9 +18,23 @@
         </div>
         <div class="form-group password-group">
           <h3 for="password">{{ $t('login.password') }}</h3>
-          <input type="password" v-model="password"  class="styled-input" ref="passwordField" />
-          <img src="@/assets/Gittax/eye.png" alt="Show Password" class="eye-icon" @click="togglePasswordVisibility" />
+          
+<div class="input-wrapper">
+          <input   :type="showPassword ? 'text' : 'password'" v-model="password"  class="styled-input" ref="passwordField" />
+          <img :src="showPassword ? require('@/assets/Gittax/eye.png') : require('@/assets/Gittax/eye.png')"
+    alt="Toggle Password"
+    class="eye-icon"
+    @click="togglePasswordVisibility"/>
         </div>
+</div>
+
+
+
+
+
+
+
+        
         <button type="submit">{{ $t('login.loginButton') }}</button>
         <router-link to="/forgot-password" class="forgot-password">{{ $t('login.forgotPassword') }}</router-link>
         <button class="google-login">

@@ -3,7 +3,9 @@ html, body, #app {
     margin: 0;
     padding: 0;
   }
-  
+  h1, h2 {
+  cursor: default;
+}
   body {
     font-family: 'Arial', sans-serif;
     background-color: #fff;
