@@ -1,19 +1,19 @@
 .notification-settings-container {
   display: flex;
-  height: 100vh;
+  height: 100%;
   background-color: white;
   color: #000;
 }
 
-.notification-settings-container.dark {
+.notification-settings-container.dark  {
   background-color: #424242;
   color: #fff;
 }
 
 .sidebar {
   flex: 0 0 20%;
-  min-width: 220px; /* keep usable width on wide screens */
-  max-width: 320px;
+  min-width: 30%; /* keep usable width on wide screens */
+  max-width: 50%;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -26,6 +26,7 @@
   background-color: #424242;
   color: #fff;
 }
+
 
 .logo-section {
   display: flex;
@@ -41,7 +42,7 @@
 
 .navigation {
   width: 100%;
-  margin: 20px 0;
+  flex: 1;
 }
 
 .nav-item {
@@ -154,7 +155,6 @@
 }
 
 .content {
-  width: 80%;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -327,16 +327,14 @@
 /* track */
 .slider {
   position: absolute;
+  inset: 0; /* fits the track tightly */
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background-color: #ccc;
   transition: background-color .25s, box-shadow .25s;
   border-radius: calc(var(--switch-height) / 2);
   box-sizing: border-box;
   max-width: 100%;
+  overflow: hidden; /* ensures knob never escapes track */
 }
 
 /* knob */
@@ -346,25 +344,25 @@
   width: var(--knob-size);
   height: var(--knob-size);
   left: var(--knob-gap);
-  bottom: var(--knob-gap);
+  top: var(--knob-gap); /* use top for consistency */
   background-color: white;
-  transition: transform .25s ease, left .25s ease;
+  transition: transform .25s ease;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   box-sizing: border-box;
+  pointer-events: none;
 }
 
-/* checked state: move knob by the exact inner distance */
+/* checked state: move knob by the exact inner distance (W - H) */
 input:checked + .slider {
   background-color: #6C5ECF;
 }
 
 input:checked + .slider:before {
-  /* translate distance = switch width - switch height (inner travel distance) */
   transform: translateX(calc(var(--switch-width) - var(--switch-height)));
 }
 
-/* ensure the switch never forces horizontal scroll */
+/* ensure the switch elements never force horizontal scroll */
 .switch, .slider, .slider:before {
   max-width: 100%;
 }

@@ -103,10 +103,10 @@
           </div>
         </div>
 
-        <div v-else>
+        <div v-else class="notifications-list">
           <div class="notification-item" v-for="notification in notifications" :key="notification.id">
             <label class="switch">
-              <input type="checkbox" v-model="notification.enabled" @change="checkSystemNotification" />
+              <input  type="checkbox" v-model="notification.enabled" @change="checkSystemNotification" />
               <span class="slider"></span>
             </label>
             <div class="notification-text">
@@ -151,6 +151,8 @@ export default {
         { id: 1, title: this.$t('notificationSettings.systemNotification'), description: this.$t('notificationSettings.systemNotificationDesc'), enabled: false },
         { id: 2, title: this.$t('notificationSettings.billingCreated'), description: this.$t('notificationSettings.billingCreatedDesc'), enabled: true },
         { id: 3, title: this.$t('notificationSettings.backupMaker'), description: this.$t('notificationSettings.backupMakerDesc'), enabled: true },
+        { id: 5, title: this.$t('notificationSettings.systemNotification'), description: this.$t('notificationSettings.systemNotificationDesc'), enabled: false },
+        
         { id: 4, title: this.$t('notificationSettings.gotFreeMonth'), description: this.$t('notificationSettings.gotFreeMonthDesc'), enabled: true }
       ],
       reports: [
@@ -175,9 +177,9 @@ export default {
   },
   methods: {
     ...mapActions(['toggleDarkMode']),
-toggleLanguage() {
-  this.$i18n.locale = this.isArabic ? 'ar' : 'en';
-},
+    toggleLanguage() {
+      this.$i18n.locale = this.isArabic ? 'ar' : 'en';
+    },
     toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
     },
@@ -193,14 +195,35 @@ toggleLanguage() {
       this.$router.push('/login');
     },
     checkSystemNotification() {
-      this.isSystemNotificationOn = this.notifications.find(notification => notification.id === 1).enabled;
+      // keep isSystemNotificationOn synced with the first notification switch
+      const sys = this.notifications.find(notification => notification.id === 1);
+      this.isSystemNotificationOn = !!(sys && sys.enabled);
+
+      // when system notification is turned ON, ensure the reports' checkboxes are enabled (mirror data)
+      if (this.isSystemNotificationOn) {
+        this.reports.forEach(r => r.selected = true);
+      }
+      // also ensure the notifications array entry matches
+      if (sys) sys.enabled = this.isSystemNotificationOn;
     },
     toggleReportSelection(reportId) {
       const report = this.reports.find(r => r.id === reportId);
       if (report) {
-        report.selected = !report.selected;
+        // toggle already handled by v-model, but ensure sync behavior
+        // If the first report checkbox (id === first item) changes, reflect it to the system slider
+        const firstReport = this.reports[0];
+        if (firstReport) {
+          // mirror first checkbox to the system-notification slider
+          this.isSystemNotificationOn = !!firstReport.selected;
+          const sys = this.notifications.find(n => n.id === 1);
+          if (sys) sys.enabled = this.isSystemNotificationOn;
+        }
+
+        // if any report becomes unchecked, keep system notification off
         if (!report.selected) {
           this.isSystemNotificationOn = false;
+          const sys = this.notifications.find(n => n.id === 1);
+          if (sys) sys.enabled = false;
         }
       }
     }
@@ -209,6 +232,25 @@ toggleLanguage() {
     notifications: {
       handler() {
         this.checkSystemNotification();
+      },
+      deep: true
+    },
+    // ensure toggling system flag programmatically keeps notifications array in sync
+    isSystemNotificationOn(newVal) {
+      const sys = this.notifications.find(n => n.id === 1);
+      if (sys) sys.enabled = !!newVal;
+      // when enabling system notifications, ensure reports are selected
+      if (newVal) this.reports.forEach(r => r.selected = true);
+    },
+    // watch first report checkbox to mirror slider (keeps everything bi-directional)
+    reports: {
+      handler(newReports) {
+        const first = newReports && newReports[0];
+        if (first) {
+          const sys = this.notifications.find(n => n.id === 1);
+          this.isSystemNotificationOn = !!first.selected;
+          if (sys) sys.enabled = !!first.selected;
+        }
       },
       deep: true
     }
