@@ -41,7 +41,7 @@
           <img src="@/assets/Gittax/google.png" alt="Google Logo" class="google-icon" />
           {{ $t('login.googleLogin') }}
         </button>
-        <router-link  to="/" class="back-home">
+        <router-link  to="/dashboard" class="back-home">
           <img src="@/assets/Gittax/back.png" alt="Back Icon" class="back-icon" />
           {{ $t('login.backHome') }}
         </router-link>

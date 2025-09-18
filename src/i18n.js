@@ -22,7 +22,7 @@ const messages = {
       loginButton: 'Log In',
       forgotPassword: 'Forgot Password?',
       googleLogin: 'Log In With Google',
-      backHome: 'Back To Home Page',
+      backHome: ' To Home Page',
       language:'English',
     },
     
@@ -139,7 +139,7 @@ const messages = {
       loginButton: 'تسجيل الدخول',
       forgotPassword: 'هل نسيت كلمة السر؟',
       googleLogin: 'تسجيل الدخول باستخدام جوجل',
-      backHome: 'العودة إلى الصفحة الرئيسية',
+      backHome: ' إلى الصفحة الرئيسية',
       language:'اللغة العربية',
     },
     addTestimonial: {
@@ -161,7 +161,7 @@ const messages = {
       password: 'كلمة المرور',
       confirmPassword: 'تأكيد كلمة المرور',
       signUpButton: 'اشتراك',
-      backHome: 'العودة إلى الصفحة الرئيسية'
+      backHome: ' إلى الصفحة الرئيسية'
     },
     notificationSettings: {
       home: 'الصفحة الرئيسية',

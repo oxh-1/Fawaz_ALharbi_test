@@ -65,7 +65,7 @@
         <div class="mode-toggle">
           <label>{{ $t('notificationSettings.nightMode') }}</label>
           <label class="switch">
-            <input type="checkbox" v-model="isDarkMode" @change="toggleDarkMode" />
+            <input type="checkbox" :checked="isDarkMode" @change="toggleDarkMode" />
             <span class="slider"></span>
           </label>
         </div>
@@ -97,21 +97,21 @@
           <div :class="['report-card', { dark: isDarkMode }]" v-for="report in reports" :key="report.id">
             <div class="report-content">
               <input type="checkbox" v-model="report.selected" @change="toggleReportSelection(report.id)" />
-              <h3>{{ report.title }}</h3>
+              <h3>{{ $t(report.titleKey) }}</h3>
             </div>
-            <p>{{ report.description }}</p>
+            <p>{{ $t(report.descKey) }}</p>
           </div>
         </div>
 
         <div v-else class="notifications-list">
           <div class="notification-item" v-for="notification in notifications" :key="notification.id">
             <label class="switch">
-              <input  type="checkbox" v-model="notification.enabled" @change="checkSystemNotification" />
+              <input type="checkbox" v-model="notification.enabled" @change="checkSystemNotification" />
               <span class="slider"></span>
             </label>
             <div class="notification-text">
-              <h3>{{ notification.title }}</h3>
-              <p>{{ notification.description }}</p>
+              <h3>{{ $t(notification.titleKey) }}</h3>
+              <p>{{ $t(notification.descKey) }}</p>
             </div>
           </div>
         </div>
@@ -148,20 +148,18 @@ export default {
       testimonials: [],
       isSystemNotificationOn: false,
       notifications: [
-        { id: 1, title: this.$t('notificationSettings.systemNotification'), description: this.$t('notificationSettings.systemNotificationDesc'), enabled: false },
-        { id: 2, title: this.$t('notificationSettings.billingCreated'), description: this.$t('notificationSettings.billingCreatedDesc'), enabled: true },
-        { id: 3, title: this.$t('notificationSettings.backupMaker'), description: this.$t('notificationSettings.backupMakerDesc'), enabled: true },
-        { id: 5, title: this.$t('notificationSettings.systemNotification'), description: this.$t('notificationSettings.systemNotificationDesc'), enabled: false },
-        
-        { id: 4, title: this.$t('notificationSettings.gotFreeMonth'), description: this.$t('notificationSettings.gotFreeMonthDesc'), enabled: true }
+        { id: 1, titleKey: 'notificationSettings.systemNotification', descKey: 'notificationSettings.systemNotificationDesc', enabled: false },
+        { id: 2, titleKey: 'notificationSettings.billingCreated', descKey: 'notificationSettings.billingCreatedDesc', enabled: true },
+        { id: 3, titleKey: 'notificationSettings.backupMaker', descKey: 'notificationSettings.backupMakerDesc', enabled: true },
+        { id: 4, titleKey: 'notificationSettings.gotFreeMonth', descKey: 'notificationSettings.gotFreeMonthDesc', enabled: true }
       ],
       reports: [
-        { id: 1, title: this.$t('reports.totalSales'), description: this.$t('reports.totalSalesDesc'), selected: true },
-        { id: 2, title: this.$t('reports.totalFees'), description: this.$t('reports.totalFeesDesc'), selected: true },
-        { id: 3, title: this.$t('reports.playgrounds'), description: this.$t('reports.playgroundsDesc'), selected: true },
-        { id: 4, title: this.$t('reports.totalSubs'), description: this.$t('reports.totalSubsDesc'), selected: true },
-        { id: 5, title: this.$t('reports.clients'), description: this.$t('reports.clientsDesc'), selected: true },
-        { id: 6, title: this.$t('reports.bankFee'), description: this.$t('reports.bankFeeDesc'), selected: true }
+        { id: 1, titleKey: 'reports.totalSales', descKey: 'reports.totalSalesDesc', selected: true },
+        { id: 2, titleKey: 'reports.totalFees', descKey: 'reports.totalFeesDesc', selected: true },
+        { id: 3, titleKey: 'reports.playgrounds', descKey: 'reports.playgroundsDesc', selected: true },
+        { id: 4, titleKey: 'reports.totalSubs', descKey: 'reports.totalSubsDesc', selected: true },
+        { id: 5, titleKey: 'reports.clients', descKey: 'reports.clientsDesc', selected: true },
+        { id: 6, titleKey: 'reports.bankFee', descKey: 'reports.bankFeeDesc', selected: true }
       ]
     };
   },
@@ -257,4 +255,5 @@ export default {
   }
 };
 </script>
+
 
