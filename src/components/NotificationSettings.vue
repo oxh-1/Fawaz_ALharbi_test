@@ -1,11 +1,15 @@
 <template>
   <div :class="['notification-settings-container', { dark: isDarkMode }]">
     <aside :class="['sidebar', { dark: isDarkMode }]">
+              <router-link to="/dashboard" >
+
       <div class="logo-section">
         <img src="@/assets/Gittax/logo1.png" alt="Gittax Logo" class="logo" />
       </div>
+              </router-link>
+
       <nav class="navigation">
-        <router-link to="/errorpage" class="nav-item active">
+        <router-link to="/dashboard" class="nav-item active">
           <div class="icon-wrapper active-icon">
             <img src="@/assets/Gittax/Home.png" alt="Home Icon" class="nav-icon" />
           </div>

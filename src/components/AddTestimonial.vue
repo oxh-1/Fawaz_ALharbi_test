@@ -163,27 +163,18 @@ export default {
 
 .modal-title {
   display: inline-block;
-  color: #cccccc;
-  text-shadow: 
-    2px 2px 0 #000000,   /* Right and down shadow */
-    -2px 2px 0 #000000,  /* Left and down shadow */
-    2px -2px 0 #000000,  /* Right and up shadow */
-    -2px -2px 0 #000000, /* Left and up shadow */
-    2px 0 0 #000000,     /* Right shadow */
-    -2px 0 0 #000000,    /* Left shadow */
-    0 2px 0 #000000,     /* Down shadow */
-    0 -2px 0 #000000;    /* Up shadow */
-  text-align: left;
-  margin-bottom: 20px;
+  color: #FFFFFF;
+  /* Up shadow */
+  margin-bottom: 50px;
   font-size: 24px;
   width: calc(100% - 60px); /* Adjusted width to fit with the close button */
   line-height: 40px; /* Match the close button height */
 }
 
 .form-group {
-  width: 90%;
+  width: 95%;
   margin-bottom: 15px;
-  display: flex;
+  display: center;
   flex-direction: column;
   justify-content: center;
 }
@@ -195,8 +186,11 @@ export default {
 }
 
 .file-drop-area {
-  width: 93%;
-  height: 40%;
+    display: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   border: 0px dashed #fff;
     background: url('@/assets/Gittax/cut.png') center center / cover no-repeat;
 
@@ -278,7 +272,7 @@ export default {
 }
 
 .character-count .count {
-  color: #FEDD59;
+  color: #00aaff;
 }
 
 form {
@@ -289,17 +283,18 @@ form {
   width: 13%;
   text-align: center;
   padding: 10px;
-  background-color: #fedd59;
+  background-color: #00aaff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   color: #333;
   font-weight: bold;
   margin-top: 15px; /* Add margin to create space between textarea and button */
-  margin-right:-480px;
+margin-left: 80%;
+
 }
 
 .save-button.dark {
-  background-color: #ffdd59;
+  background-color: #00aaff;
 }
 </style>
