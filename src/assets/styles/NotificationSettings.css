@@ -305,8 +305,8 @@
   /* responsive sizes (based on root font-size) */
   --switch-width: 3.2rem;  /* ~51px */
   --switch-height: 1.95rem; /* ~31px */
-  --knob-gap: 0.025rem;     /* small gap inside the track */
-  --knob-size: calc(var(--switch-height) - (0.025rem * 2));
+  --knob-gap: 0.125rem;     /* small gap inside the track */
+  --knob-size: calc(var(--switch-height) - (var(--knob-gap) * 2));
 
   position: relative;
   display: inline-block;
