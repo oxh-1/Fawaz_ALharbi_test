@@ -94,10 +94,9 @@ export default {
 
 .modal {
   background-color: #2c2c2c;
-  padding: 20px;
+  padding: 50px;
   border-radius: 10px;
-  width: 40%;
-  height: 82%;
+
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -125,15 +124,6 @@ export default {
   cursor: pointer;
 }
 
-.close-button .square {
-  width: 7px;
-  height: 7px;
-  border: 2px solid #000000;
-  background: transparent;
-  position: absolute;
-  top: 13px;
-  right: 13px;
-}
 
 .close-button .x {
   position: relative;
@@ -185,21 +175,48 @@ export default {
   font-size: 16px;
 }
 
+
 .file-drop-area {
-    display: center;
+  position: relative;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  border: 0px dashed #fff;
-    background: url('@/assets/Gittax/cut.png') center center / cover no-repeat;
+  align-items: center;
 
-  padding: 20px;
-  text-align: center;
+  /* make room for decorative border */
+  padding: 28px;            /* inner spacing; accounts for border thickness */
+  border-radius: 12px;
+  background-color: rgba(255,255,255,0.02);
+
+
+  /* decorative image used as border where supported */
+  border: 12px solid transparent;
+  -webkit-border-image: url('@/assets/Gittax/cut.png') 30 round; /* fallback borderline */
+  border-image: url('@/assets/Gittax/cut.png') 30 round;
+
+  /* visuals */
   color: #fff;
   cursor: pointer;
-  position: relative;
-  margin-bottom: 15px;
+  text-align: center;
+  margin: 10px 0 15px;
+  box-sizing: border-box;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+
+.file-drop-area:hover,
+.file-drop-area:focus-within {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  border-color: rgba(255,255,255,0.12);
+  background-color: rgba(255,255,255,0.03);
+}
+
+.file-drop-area.drag-active {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 36px rgba(0,170,255,0.12);
+  border-color: rgba(0,170,255,0.45);
+  background-color: rgba(0,170,255,0.02);
 }
 
 .file-drop-area.dark {
@@ -211,8 +228,8 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   opacity: 0;
   cursor: pointer;
 }
@@ -280,7 +297,8 @@ form {
 }
 
 .save-button {
-  width: 13%;
+  width: 22%;
+  max-width: 100px;
   text-align: center;
   padding: 10px;
   background-color: #00aaff;

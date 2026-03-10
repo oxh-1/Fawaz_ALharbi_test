@@ -116,13 +116,16 @@
             <div class="notification-text">
               <h3>{{ notification.title }}</h3>
               <p>{{ notification.description }}</p>
+            
             </div>
+            
           </div>
         </div>
       </section>
+      
       <AddTestimonial v-if="showTestimonialPopup" @close="showTestimonialPopup = false" @save="saveTestimonial" />
       <section class="testimonials">
-        <div class="testimonial-item" v-for="testimonial in testimonials" :key="testimonial.id">
+       <div class="testimonial-item" v-for="testimonial in testimonials" :key="testimonial.id">
           <h3>User Name: {{ testimonial.username }}</h3>
           <p>Company Name: {{ testimonial.companyName }}</p>
           <p>Content: {{ testimonial.content }}</p>
@@ -158,7 +161,7 @@ export default {
         { id: 4, title: this.$t('notificationSettings.gotFreeMonth'), description: this.$t('notificationSettings.gotFreeMonthDesc'), enabled: true }
       ],
       reports: [
-        { id: 1, title: this.$t('reports.totalSales'), description: this.$t('reports.totalSalesDesc'), selected: true },
+        { id: 1, title: this.$t('reports.totalSales'), description: this.$t('reports.totalSalesDesc'), selected: false },
         { id: 2, title: this.$t('reports.totalFees'), description: this.$t('reports.totalFeesDesc'), selected: true },
         { id: 3, title: this.$t('reports.playgrounds'), description: this.$t('reports.playgroundsDesc'), selected: true },
         { id: 4, title: this.$t('reports.totalSubs'), description: this.$t('reports.totalSubsDesc'), selected: true },
