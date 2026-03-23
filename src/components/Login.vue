@@ -79,7 +79,7 @@ onMounted(() => {
 
   script.onload = () => {
     google.accounts.id.initialize({
-      client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+      client_id: "http://784439266873-aonrmg0pg5k9tp102dkeliumja0969cq.apps.googleusercontent.com",
       callback: handleCredentialResponse,
     });
     google.accounts.id.renderButton(
