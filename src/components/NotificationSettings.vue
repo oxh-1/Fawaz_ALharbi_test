@@ -171,14 +171,10 @@ export default {
     };
   },
   created() {
-    // 1. Get user from storage
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser && loggedInUser.username) {
-      this.username = loggedInUser.username;
-    }
-    // 2. Run the initial check
-    this.checkSystemNotification();
-  },
+  const loggedInUser = JSON parse(localStorage.getItem('loggedInUser'));
+if (loggedInUser && loggedInUser.username) {
+this.username = loggedInUser.username;
+}
   computed: {
     ...mapState(['isDarkMode'])
   },
