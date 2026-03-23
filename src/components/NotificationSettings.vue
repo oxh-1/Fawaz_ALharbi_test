@@ -172,9 +172,10 @@ export default {
   },
   created() {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser) {
-      // Check for .name (Google) OR .username (Manual)
+    if (loggedInUser && loggedInUser.username) {
+      this.username = loggedInUser.username;
     }
+    this.checkSystemNotification();
   },
   computed: {
     ...mapState(['isDarkMode'])
