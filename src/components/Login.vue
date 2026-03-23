@@ -106,19 +106,23 @@ export default {
       }
     },
 
-    initializeGoogleButton() {
-      // Use 'window.google' to ensure the browser finds the global object
+        initializeGoogleButton() {
+      // Use 'window.google' to satisfy ESLint and ensure it's found globally
       if (window.google) {
         window.google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com", // PASTE YOUR ID HERE
+          client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
           callback: this.handleCredentialResponse,
         });
+        
         window.google.accounts.id.renderButton(
           document.getElementById("google-btn"),
-          { theme: "outline", size: "large", width: "100%" } // Styled to fit your form
+          { theme: "outline", size: "large", width: "100%" }
         );
+      } else {
+        console.error("Google script not loaded yet");
       }
     },
+
 
     async handleCredentialResponse(response) {
       try {
