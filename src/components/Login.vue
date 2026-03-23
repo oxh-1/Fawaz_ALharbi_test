@@ -37,14 +37,12 @@
         
         <button type="submit">{{ $t('login.loginButton') }}</button>
         <router-link to="/forgot-password" class="forgot-password">{{ $t('login.forgotPassword') }}</router-link>
+          <div id="google-btn">
         <button class="google-login">
           <img src="@/assets/Gittax/google.png" alt="Google Logo" class="google-icon" />
           {{ $t('login.googleLogin') }}
-        </button>
-        <router-link  to="/" class="back-home">
-          <img src="@/assets/Gittax/back.png" alt="Back Icon" class="back-icon" />
-          {{ $t('login.backHome') }}
-        </router-link>
+        </button></div>
+        
     <div class="language-switcher">
       <button type="button" @click="switchLanguage">{{ nextLanguage }}</button>
     </div>
@@ -68,6 +66,43 @@ import '@/assets/styles/LoginPage.css'; // Import the new CSS file
 import PopupNotification from '../components/PopupNotification.vue';
 
 
+
+
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  // Load Google Script
+  const script = document.createElement('script');
+  script.src = "https://accounts.google.com/gsi/client";
+  script.async = true;
+  document.head.appendChild(script);
+
+  script.onload = () => {
+    google.accounts.id.initialize({
+      client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("google-btn"),
+      { theme: "outline", size: "large" }
+    );
+  };
+});
+
+async function handleCredentialResponse(response) {
+  // This 'credential' is a JWT token from Google
+  const res = await fetch('/api/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ token: response.credential }),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  const data = await res.json();
+  console.log("Logged in as:", data.user);
+}
+
+
+
+  
 
 export default {
   name: 'LoginPage',
