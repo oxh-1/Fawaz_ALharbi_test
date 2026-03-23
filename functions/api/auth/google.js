@@ -1,4 +1,5 @@
-export async function onRequestPost({ request }) { // Change this line
+export async function onRequestPost(context) { // Full context object
+  const { request } = context; // Then destructure
   try {
     const { token } = await request.json();
 
