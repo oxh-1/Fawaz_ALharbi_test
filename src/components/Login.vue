@@ -110,7 +110,7 @@ export default {
       // Use 'window.google' to satisfy ESLint and ensure it's found globally
       if (window.google) {
         window.google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+          client_id: "784439266873-aonrmg0pg5k9tp102dkeliumja0969cq.apps.googleusercontent.com",
           callback: this.handleCredentialResponse,
         });
         
