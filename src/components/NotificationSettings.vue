@@ -138,7 +138,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import AddTestimonial from './AddTestimonial.vue';
-import '@/assets/styles/NotificationSettings.css'; // Import the new CSS file
+import '@/assets/styles/NotificationSettings.css'; 
 
 export default {
   name: 'NotificationSettings',
@@ -171,11 +171,12 @@ export default {
     };
   },
   created() {
+    // 1. Get user from storage
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
     if (loggedInUser && loggedInUser.username) {
       this.username = loggedInUser.username;
     }
-    // This is the correct place for this call
+    // 2. Run the initial check
     this.checkSystemNotification();
   },
   computed: {
@@ -207,7 +208,6 @@ export default {
     toggleReportSelection(reportId) {
       const report = this.reports.find(r => r.id === reportId);
       if (report) {
-        // Note: report.selected is already toggled by v-model in the template
         if (!report.selected) {
           this.isSystemNotificationOn = false;
         }
@@ -224,4 +224,3 @@ export default {
   }
 };
 </script>
-
