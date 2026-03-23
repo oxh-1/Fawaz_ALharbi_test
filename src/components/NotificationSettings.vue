@@ -175,6 +175,7 @@ export default {
     if (loggedInUser && loggedInUser.username) {
       this.username = loggedInUser.username;
     }
+    // This is the correct place for this call
     this.checkSystemNotification();
   },
   computed: {
@@ -182,9 +183,9 @@ export default {
   },
   methods: {
     ...mapActions(['toggleDarkMode']),
-toggleLanguage() {
-  this.$i18n.locale = this.isArabic ? 'ar' : 'en';
-},
+    toggleLanguage() {
+      this.$i18n.locale = this.isArabic ? 'ar' : 'en';
+    },
     toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
     },
@@ -200,12 +201,13 @@ toggleLanguage() {
       this.$router.push('/login');
     },
     checkSystemNotification() {
-      this.isSystemNotificationOn = this.notifications.find(notification => notification.id === 1).enabled;
+      const systemNotif = this.notifications.find(n => n.id === 1);
+      this.isSystemNotificationOn = systemNotif ? systemNotif.enabled : false;
     },
     toggleReportSelection(reportId) {
       const report = this.reports.find(r => r.id === reportId);
       if (report) {
-        report.selected = !report.selected;
+        // Note: report.selected is already toggled by v-model in the template
         if (!report.selected) {
           this.isSystemNotificationOn = false;
         }
