@@ -38,7 +38,7 @@
         <button type="submit">{{ $t('login.loginButton') }}</button>
         <router-link to="/forgot-password" class="forgot-password">{{ $t('login.forgotPassword') }}</router-link>
           <div id="google-btn">
-        <button class="google-login">
+        <button type="submit"class="google-login">
           <img src="@/assets/Gittax/google.png" alt="Google Logo" class="google-icon" />
           {{ $t('login.googleLogin') }}
         </button></div>
