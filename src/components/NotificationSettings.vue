@@ -171,10 +171,14 @@ export default {
     };
   },
   created() {
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser && loggedInUser.username) {
-      this.username = loggedInUser.username;
-    }
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  if (loggedInUser) {
+    // Check for .name (Google) OR .username (Manual)
+    this.username = loggedInUser.name || loggedInUser.username || 'User';
+  }
+  this.checkSystemNotification();
+},
+
     this.checkSystemNotification();
   },
   computed: {
