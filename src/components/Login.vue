@@ -60,6 +60,112 @@
   </div>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex';
+import { i18n } from '@/i18n';
+import '@/assets/styles/LoginPage.css';
+import PopupNotification from '../components/PopupNotification.vue';
+
+export default {
+  name: 'LoginPage',
+  components: {
+    PopupNotification
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      showPopup: true,
+      showPassword: false
+    };
+  },
+  computed: {
+    ...mapState(['locale', 'isDarkMode']),
+    nextLanguage() {
+      return this.locale === 'en' ? 'اللغة العربية' : 'English';
+    }
+  },
+  mounted() {
+    this.initGoogleLogin();
+  },
+  methods: {
+    ...mapActions(['setLocale', 'toggleDarkMode']),
+    
+    initGoogleLogin() {
+      // 1. Check if script is already there, if not, add it
+      if (!document.getElementById('google-jssdk')) {
+        const script = document.createElement('script');
+        script.id = 'google-jssdk';
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+        
+        script.onload = () => this.initializeGoogleButton();
+      } else {
+        this.initializeGoogleButton();
+      }
+    },
+
+    initializeGoogleButton() {
+      // Use 'window.google' to ensure the browser finds the global object
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com", // PASTE YOUR ID HERE
+          callback: this.handleCredentialResponse,
+        });
+        window.google.accounts.id.renderButton(
+          document.getElementById("google-btn"),
+          { theme: "outline", size: "large", width: "100%" } // Styled to fit your form
+        );
+      }
+    },
+
+    async handleCredentialResponse(response) {
+      try {
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({ token: response.credential }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        
+        // On success, redirect like your manual login does
+        if (data.user) {
+          localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+          this.$router.push('/notification-settings');
+        }
+      } catch (error) {
+        console.error("Google Login Failed", error);
+      }
+    },
+
+    login() {
+      // Your existing manual login logic...
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.email === this.email && u.password === this.password);
+      if (user) {
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        this.$router.push('/notification-settings');
+      } else {
+         // Usually you'd show an error here, but following your logic:
+         this.$router.push('/notification-settings');
+      }
+    },
+
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+
+    switchLanguage() {
+      const newLocale = this.locale === 'en' ? 'ar' : 'en';
+      this.setLocale(newLocale);
+      i18n.locale = newLocale;
+    }
+  }
+};
+
+</script>
+/*
 import { mapState, mapActions } from 'vuex';
 import { i18n } from '@/i18n'; // Adjust this import according to your project structure
 import '@/assets/styles/LoginPage.css'; // Import the new CSS file
@@ -155,5 +261,4 @@ export default {
 
     }
   }
-};
-</script>
+}; */
