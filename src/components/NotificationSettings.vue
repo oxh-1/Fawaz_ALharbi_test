@@ -151,9 +151,7 @@ export default {
       
       
     
-      user: JSON.parse(localStorage.getItem('loggedInUser')),
-      isArabic: this.$i18n.locale === 'ar'
-    
+      
   
       username: '',
       showTestimonialPopup: false,
