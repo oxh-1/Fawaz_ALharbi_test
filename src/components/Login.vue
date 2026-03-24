@@ -125,23 +125,29 @@ export default {
 
 
     async handleCredentialResponse(response) {
-      try {
-        const res = await fetch('/api/auth/google', {
-          method: 'POST',
-          body: JSON.stringify({ token: response.credential }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-        const data = await res.json();
-        
-        // On success, redirect like your manual login does
-        if (data.user) {
-          localStorage.setItem('loggedInUser', JSON.stringify(data.user));
-          this.$router.push('/notification-settings');
-        }
-      } catch (error) {
-        console.error("Google Login Failed", error);
-      }
-    },
+  try {
+    const res = await fetch('/api/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ token: response.credential }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const data = await res.json();
+    console.log("Backend Response:", data); // Check your console for this!
+
+    // Ensure we check for data.user specifically
+    if (data && data.user) {
+      localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+      this.$router.push('/notification-settings');
+    } else {
+      console.error("Login failed: No user data returned", data.error);
+      alert("Login failed. Please check the console.");
+    }
+  } catch (error) {
+    console.error("Network or Server Error:", error);
+  }
+},
+
 
     login() {
       // Your existing manual login logic...
