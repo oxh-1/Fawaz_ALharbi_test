@@ -149,8 +149,8 @@ export default {
     return {
 
       
-      data() {
-    return {
+      
+    
       user: JSON.parse(localStorage.getItem('loggedInUser')),
       isArabic: this.$i18n.locale === 'ar'
     
