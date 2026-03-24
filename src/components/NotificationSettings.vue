@@ -170,16 +170,7 @@ export default {
       ]
     };
   },
-  created() {
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-
-  if (loggedInUser) {
-    // name (Google) OR username (Manual)
-    this.username = loggedInUser.name || loggedInUser.username || 'User';
-  }
-
-  this.checkSystemNotification();
-},
+  
   computed: {
     ...mapState(['isDarkMode'])
   },
