@@ -4,9 +4,8 @@ export async function onRequestPost(context) {
   try {
     const { token } = await request.json();
 
-    const googleRes = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
-    );
+    const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
+
     const payload = await googleRes.json();
 
     if (!payload || payload.error || !payload.sub) {
