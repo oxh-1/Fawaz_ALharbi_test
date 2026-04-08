@@ -10,58 +10,52 @@
         <h2 class="login-title">{{ $t('login.title') }}</h2>
         <h4 class="no-account">
           {{ $t('login.noAccount') }}
-          <router-link  to="/signup" class="signup-link">{{ $t('login.signUp') }}</router-link>
+          <router-link to="/signup" class="signup-link">{{ $t('login.signUp') }}</router-link>
         </h4>
         <div class="form-group">
           <h3 for="email">{{ $t('login.email') }}</h3>
-          <input type="email" v-model="email"  class="styled-input" />
+          <input type="email" v-model="email" class="styled-input" />
         </div>
         <div class="form-group password-group">
           <h3 for="password">{{ $t('login.password') }}</h3>
-          
-<div class="input-wrapper">
-          <input   :type="showPassword ? 'text' : 'password'" v-model="password"  class="styled-input" ref="passwordField" />
-          <img :src="showPassword ? require('@/assets/Gittax/eye.png') : require('@/assets/Gittax/eye.png')"
-    alt="Toggle Password"
-    class="eye-icon"
-    @click="togglePasswordVisibility"/>
+          <div class="input-wrapper">
+            <input :type="showPassword ? 'text' : 'password'" v-model="password" class="styled-input" ref="passwordField" />
+            <img :src="require('@/assets/Gittax/eye.png')"
+              alt="Toggle Password"
+              class="eye-icon"
+              @click="togglePasswordVisibility"/>
+          </div>
         </div>
-</div>
 
+        <div v-if="loginError" class="error-message">{{ loginError }}</div>
 
-
-
-
-
-
-        
         <button type="submit">{{ $t('login.loginButton') }}</button>
         <router-link to="/forgot-password" class="forgot-password">{{ $t('login.forgotPassword') }}</router-link>
-          <div id="google-btn">
-        <button class="google-login">
-          <img src="@/assets/Gittax/google.png" alt="Google Logo" class="google-icon" />
-          {{ $t('login.googleLogin') }}
-        </button></div>
-        
-    <div class="language-switcher">
-      <button type="button" @click="switchLanguage">{{ nextLanguage }}</button>
-    </div>
-    <PopupNotification
-  v-if="showPopup"
-  :message="'Do you accept the terms and conditions?'"
-  :acceptText="'Accept'"
-  :rejectText="'Reject'"
-  @accept="handleAccept"
-  @reject="handleReject"
-/>
+
+        <!-- Google Sign-In button renders here -->
+        <div id="google-btn" class="google-btn-container"></div>
+
+        <div class="language-switcher">
+          <button type="button" @click="switchLanguage">{{ nextLanguage }}</button>
+        </div>
+
+        <PopupNotification
+          v-if="showPopup"
+          :message="'Do you accept the terms and conditions?'"
+          :acceptText="'Accept'"
+          :rejectText="'Reject'"
+          @accept="handleAccept"
+          @reject="handleReject"
+        />
 
       </form>
     </div>
   </div>
 </template>
+
 <script>
-  import { mapState, mapActions } from 'vuex';
-import { i18n } from '@/i18n';
+import { mapState, mapActions } from 'vuex';
+import i18n from '@/i18n';
 import '@/assets/styles/LoginPage.css';
 import PopupNotification from '../components/PopupNotification.vue';
 
@@ -74,8 +68,9 @@ export default {
     return {
       email: '',
       password: '',
-      showPopup: true,
-      showPassword: false
+      showPopup: false,
+      showPassword: false,
+      loginError: ''
     };
   },
   computed: {
@@ -88,77 +83,87 @@ export default {
     this.initGoogleLogin();
   },
   methods: {
-    ...mapActions(['setLocale', 'toggleDarkMode']),
-    
+    ...mapActions(['setLocale', 'toggleDarkMode', 'setUser']),
+
     initGoogleLogin() {
-      // 1. Check if script is already there, if not, add it
       if (!document.getElementById('google-jssdk')) {
         const script = document.createElement('script');
         script.id = 'google-jssdk';
-        script.src = "https://accounts.google.com/gsi/client";
+        script.src = 'https://accounts.google.com/gsi/client';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
-        
         script.onload = () => this.initializeGoogleButton();
       } else {
-        this.initializeGoogleButton();
+        // Script already loaded — initialize immediately or wait a tick
+        if (window.google) {
+          this.initializeGoogleButton();
+        } else {
+          setTimeout(() => this.initializeGoogleButton(), 500);
+        }
       }
     },
 
-        initializeGoogleButton() {
-      // Use 'window.google' to satisfy ESLint and ensure it's found globally
+    initializeGoogleButton() {
       if (window.google) {
         window.google.accounts.id.initialize({
-          client_id: "784439266873-aonrmg0pg5k9tp102dkeliumja0969cq.apps.googleusercontent.com",
+          client_id: '784439266873-aonrmg0pg5k9tp102dkeliumja0969cq.apps.googleusercontent.com',
           callback: this.handleCredentialResponse,
         });
-        
+
         window.google.accounts.id.renderButton(
-          document.getElementById("google-btn"),
-          { theme: "outline", size: "large", width: "100%" }
+          document.getElementById('google-btn'),
+          { theme: 'outline', size: 'large', width: '100%' }
         );
       } else {
-        console.error("Google script not loaded yet");
+        console.error('Google GSI script not loaded yet');
       }
     },
 
-
+    /**
+     * Verifies the Google ID token client-side via Google's tokeninfo endpoint.
+     * This avoids the need for a backend server and works in local dev.
+     */
     async handleCredentialResponse(response) {
-  try {
-    const res = await fetch('/api/auth/google', {
-      method: 'POST',
-      body: JSON.stringify({ token: response.credential }),
-      headers: { 'Content-Type': 'application/json' }
-    });
+      this.loginError = '';
+      try {
+        const res = await fetch(
+          `https://oauth2.googleapis.com/tokeninfo?id_token=${response.credential}`
+        );
+        const payload = await res.json();
 
-    const data = await res.json();
-    console.log("Backend Response:", data); // Check your console for this!
+        if (!payload || payload.error || !payload.sub) {
+          this.loginError = 'Google sign-in failed. Please try again.';
+          console.error('Token verification failed:', payload.error);
+          return;
+        }
 
-    // Ensure we check for data.user specifically
-    if (data && data.user) {
-      localStorage.setItem('loggedInUser', JSON.stringify(data.user));
-      this.$router.push('/notification-settings');
-    } else {
-      console.error("Login failed: No user data returned", data.error);
-      alert("Login failed. Please check the console.");
-    }
-  } catch (error) {
-    console.error("Network or Server Error:", error);
-  }
-},
+        const user = {
+          id: payload.sub,
+          email: payload.email,
+          name: payload.name,
+          picture: payload.picture
+        };
 
+        // Commit to Vuex (which also saves to localStorage)
+        this.setUser(user);
+        this.$router.push('/notification-settings');
+
+      } catch (error) {
+        console.error('Google login error:', error);
+        this.loginError = 'A network error occurred. Please check your connection.';
+      }
+    },
 
     login() {
-      // Your existing manual login logic...
+      this.loginError = '';
       const users = JSON.parse(localStorage.getItem('users')) || [];
       const user = users.find(u => u.email === this.email && u.password === this.password);
       if (user) {
-        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        this.setUser(user);
         this.$router.push('/notification-settings');
       } else {
-         // Usually you'd show an error here, but following your logic:
-         this.$router.push('/notification-settings');
+        this.loginError = 'Invalid email or password.';
       }
     },
 
@@ -170,105 +175,15 @@ export default {
       const newLocale = this.locale === 'en' ? 'ar' : 'en';
       this.setLocale(newLocale);
       i18n.locale = newLocale;
+    },
+
+    handleAccept() {
+      this.showPopup = false;
+    },
+
+    handleReject() {
+      this.showPopup = false;
     }
   }
 };
-
 </script>
-/*
-import { mapState, mapActions } from 'vuex';
-import { i18n } from '@/i18n'; // Adjust this import according to your project structure
-import '@/assets/styles/LoginPage.css'; // Import the new CSS file
-import PopupNotification from '../components/PopupNotification.vue';
-
-
-
-
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  // Load Google Script
-  const script = document.createElement('script');
-  script.src = "https://accounts.google.com/gsi/client";
-  script.async = true;
-  document.head.appendChild(script);
-
-  script.onload = () => {
-    google.accounts.id.initialize({
-      client_id: "http://784439266873-aonrmg0pg5k9tp102dkeliumja0969cq.apps.googleusercontent.com",
-      callback: handleCredentialResponse,
-    });
-    google.accounts.id.renderButton(
-      document.getElementById("google-btn"),
-      { theme: "outline", size: "large" }
-    );
-  };
-});
-
-async function handleCredentialResponse(response) {
-  // This 'credential' is a JWT token from Google
-  const res = await fetch('/api/auth/google', {
-    method: 'POST',
-    body: JSON.stringify({ token: response.credential }),
-    headers: { 'Content-Type': 'application/json' }
-  });
-  const data = await res.json();
-  console.log("Logged in as:", data.user);
-}
-
-
-
-  
-
-export default {
-  name: 'LoginPage',
-    components: {
-    PopupNotification
-  },
-  data() {
-    return {
-      email: '',
-      password: '',
-      showPopup: true,
-
-      showPassword: false
-      
-    };
-  },
-  computed: {
-    ...mapState(['locale', 'isDarkMode']),
-    nextLanguage() {
-      return this.locale === 'en' ? 'اللغة العربية' : 'English';
-    }
-  },
-  methods: {
-    ...mapActions(['setLocale', 'toggleDarkMode']),
-    login() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const user = users.find(user => user.email === this.email && user.password === this.password);
-      if (user) {
-        localStorage.setItem('loggedInUser', JSON.stringify(user));
-        this.$router.push('/notification-settings');
-      } else {
-         this.$router.push('/notification-settings');
-      }
-    },
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-      const passwordField = this.$refs.passwordField;
-      passwordField.type = this.showPassword ? 'text' : 'password';
-    },
-     switchLanguage() {
-      const newLocale = this.locale === 'en' ? 'ar' : 'en';
-      this.setLocale(newLocale);
-      i18n.locale = newLocale;
-
-    
-      
-      i18n.locale = newLocale;
-      this.isArabic = !this.isArabic;
-    
-
-    }
-  }
-}; */

@@ -2,77 +2,70 @@
   <div :class="['dashboard-container', { dark: isDarkMode }]">
     <div class="header">
       <h2>{{ $t('dashboard.title') }}</h2>
-      <div class="actions">
-        <button @click="toggleDarkMode">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</button>
-        <button @click="toggleLanguage">{{ isArabic ? 'English' : 'اللغة العربية' }}</button>
-        <button @click="logout">{{ $t('dashboard.logout') }}</button>
+      <div class="user-section">
+        <div class="user-info" v-if="currentUser">
+          <img :src="currentUser.picture || defaultAvatar" alt="User Avatar" class="avatar" />
+          <span class="username-label">{{ currentUser.name || currentUser.username }}</span>
+        </div>
+        <div class="actions">
+          <button @click="toggleDarkMode">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</button>
+          <button @click="toggleLanguage">{{ isArabic ? 'English' : 'اللغة العربية' }}</button>
+          <button @click="handleLogout">{{ $t('dashboard.logout') }}</button>
+        </div>
       </div>
     </div>
-    <p>{{ $t('dashboard.welcome') }}, {{ user.username }}</p>
+
+    <p class="welcome-text">{{ $t('dashboard.welcome') }}, {{ currentUser ? (currentUser.name || currentUser.username) : '' }}</p>
+
     <div class="companies">
-      <div class="company-card" @click="navigateTo('login')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
+      <div class="company-card" @click="navigateTo('notification-settings')">
+        <img src="@/assets/Gittax/logo1.png" alt="Gittax Logo" class="company-logo" />
         <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>login page </h3>
-          <p></p>
-          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
+          <h3>Gittax Platform</h3>
+          <p>Notification Settings & Reports</p>
+          <span class="card-link">{{ $t('dashboard.notificationSettings') }} →</span>
         </div>
       </div>
-          <div class="company-card" @click="navigateTo('signup')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>signup Page</h3>
-          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
-        </div>
-      </div>
-          <div class="company-card" @click="navigateTo('notification-settings')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Notification Settings</h3>
-          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
-        </div>
-      </div>
-          <div class="company-card" @click="navigateTo('notification-settings')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company G Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Admin page</h3>
-          <router-link to="/notification-settings">{{ $t('dashboard.notificationSettings') }}</router-link>
-        </div>
-      </div>
-      
+
       <div class="company-card" @click="navigateTo('reports')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company L3bny Logo" class="company-logo" />
+        <img src="@/assets/Gittax/logo1.png" alt="Company Logo" class="company-logo" />
         <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Company 2</h3>
-          <router-link to="/reports">{{ $t('dashboard.reports') }}</router-link>
+          <h3>Company Reports</h3>
+          <p>View and export your reports</p>
+          <span class="card-link">{{ $t('dashboard.reports') }} →</span>
+        </div>
+      </div>
+
+      <div class="company-card" @click="navigateTo('profile')">
+        <img src="@/assets/Gittax/logo1.png" alt="Profile" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>My Profile</h3>
+          <p>View and edit your profile</p>
+          <span class="card-link">Go to Profile →</span>
+        </div>
+      </div>
+
+      <div class="company-card" @click="navigateTo('settings')">
+        <img src="@/assets/Gittax/logo1.png" alt="Settings" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>Settings</h3>
+          <p>App preferences and language</p>
+          <span class="card-link">Go to Settings →</span>
+        </div>
+      </div>
+
+      <div class="company-card" @click="navigateTo('invoices')">
+        <img src="@/assets/Gittax/logo1.png" alt="Invoices" class="company-logo" />
+        <div :class="['company-info', { dark: isDarkMode }]">
+          <h3>Invoices</h3>
+          <p>Manage your invoices and billing</p>
+          <span class="card-link">Go to Invoices →</span>
         </div>
       </div>
     </div>
-     <div class="companies" style="margin-top: 200px;">
-      <div class="company-card" @click="navigateTo('reports')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company L3bny Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Company 2</h3>
-          <router-link to="/reports">{{ $t('dashboard.reports') }}</router-link>
-        </div>
-      </div>
-       <div class="company-card" @click="navigateTo('reports')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company L3bny Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Company 2</h3>
-          <router-link to="/reports">{{ $t('dashboard.reports') }}</router-link>
-        </div>
-      </div>
-       <div class="company-card" @click="navigateTo('reports')">
-        <img src="@/assets/Gittax/logo1.png" alt="Company L3bny Logo" class="company-logo" />
-        <div :class="['company-info', { dark: isDarkMode }]">
-          <h3>Company 2</h3>
-          <router-link to="/reports">{{ $t('dashboard.reports') }}</router-link>
-        </div>
-      </div>
-     </div>
   </div>
 </template>
+
 <script>
 import { mapState, mapActions } from 'vuex';
 
@@ -80,15 +73,25 @@ export default {
   name: 'UserDashboard',
   data() {
     return {
-      user: JSON.parse(localStorage.getItem('loggedInUser')),
-      isArabic: this.$i18n.locale === 'ar'
+      isArabic: this.$i18n.locale === 'ar',
+      defaultAvatar: require('@/assets/Gittax/avatar.png')
     };
   },
   computed: {
-    ...mapState(['isDarkMode'])
+    ...mapState(['isDarkMode', 'user']),
+    currentUser() {
+      // Prefer Vuex store, fallback to localStorage
+      return this.user || JSON.parse(localStorage.getItem('loggedInUser'));
+    }
+  },
+  created() {
+    // Guard: redirect to login if not authenticated
+    if (!this.currentUser) {
+      this.$router.push('/login');
+    }
   },
   methods: {
-    ...mapActions(['toggleDarkMode']),
+    ...mapActions(['toggleDarkMode', 'logout']),
     navigateTo(route) {
       this.$router.push(`/${route}`);
     },
@@ -97,25 +100,27 @@ export default {
       this.$i18n.locale = newLocale;
       this.isArabic = !this.isArabic;
     },
-    logout() {
-      localStorage.removeItem('loggedInUser');
+    handleLogout() {
+      this.logout();
       this.$router.push('/login');
     }
   }
 };
 </script>
+
 <style scoped>
 .dashboard-container {
-  padding: 20px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: #f0f2f5;
   color: black;
+  min-height: 100vh;
 }
 
 .dashboard-container.dark {
-  background-color: #2c2c2c;
+  background-color: #1a1a2e;
   color: white;
 }
 
@@ -124,62 +129,113 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 12px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-sizing: border-box;
+}
+
+.dashboard-container.dark .header {
+  background: #16213e;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #275559;
+}
+
+.username-label {
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .actions {
   display: flex;
+  gap: 10px;
 }
 
 .actions button {
-  margin: 0 10px;
-  padding: 10px 20px;
+  padding: 8px 16px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
-  background-color: #00aaff;
+  border-radius: 8px;
+  background-color: #275559;
   color: white;
-  transition: background-color 0.3s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .actions button:hover {
-  background-color: #0088cc;
+  background-color: #1d3d40;
+  transform: translateY(-1px);
+}
+
+.welcome-text {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+  align-self: flex-start;
+}
+
+.dashboard-container.dark .welcome-text {
+  color: #aaa;
 }
 
 .companies {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .company-card {
-    margin-top: 10px;
-
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 20px;
-  width: 300px;
+  background: white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.dashboard-container.dark .company-card {
+  background: #16213e;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .company-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.company-card.dark {
-  background: #444;
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.12);
 }
 
 .company-logo {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 14px;
+  border-radius: 12px;
 }
 
 .company-info {
@@ -187,23 +243,28 @@ export default {
 }
 
 .company-info h3 {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
-.company-info a {
-  color: #00aaff;
-  text-decoration: none;
-  font-weight: bold;
+.company-info p {
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 12px;
 }
 
-.company-info a:hover {
-  text-decoration: underline;
+.dashboard-container.dark .company-info p {
+  color: #aaa;
 }
 
-.company-info.dark h3{
-  color: black;
+.card-link {
+  color: #275559;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
-.company-info.dark a {
-  color: #00aaff;
+
+.dashboard-container.dark .card-link {
+  color: #5ab5be;
 }
 </style>

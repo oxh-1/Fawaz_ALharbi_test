@@ -70,7 +70,7 @@
             <img src="@/assets/Gittax/Drop.png" alt="Dropdown Icon" class="dropdown-icon" @click="toggleUserDropdown" />
             
             <div v-if="userDropdownVisible" class="user-dropdown">
-              <router-link to="/errorpage">{{ $t('notificationSettings.profile') }}</router-link>
+              <router-link to="/profile">{{ $t('notificationSettings.profile') }}</router-link>
               <button @click="logout" class="dropdown-link">{{ $t('dashboard.logout') }}</button>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['toggleDarkMode', 'setLocale']),
+    ...mapActions(['toggleDarkMode', 'setLocale', 'logout']),
 
     loadUser() {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -220,7 +220,7 @@ export default {
     },
 
     logout() {
-      localStorage.removeItem('loggedInUser');
+      this.$store.dispatch('logout');
       this.$router.push('/login');
     }
   }

@@ -102,8 +102,9 @@ export default {
   },
   created() {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser && loggedInUser.username) {
-      this.username = loggedInUser.username;
+    if (loggedInUser) {
+      // Google users have .name, manual signup users have .username
+      this.username = loggedInUser.name || loggedInUser.username || 'User';
     }
   },
   computed: {
@@ -248,18 +249,16 @@ export default {
 }
 
 .export-button {
-    margin-right: 10px;
- width: Fixed (170px)px;
-height: Fixed (48px)px;
-top: 75px;
-left: 1510px;
-padding: 0px 15px 0px 15px;
-gap: 8px;
-border-radius: 10px 10px 10px 10px;
-
+  margin-right: 10px;
+  width: 170px;
+  height: 48px;
+  padding: 0px 15px;
+  gap: 8px;
+  border-radius: 10px;
   padding: 10px 20px;
   background-color: #ffcc00;
   border: none;
+  cursor: pointer;
 }
 
 .reports {

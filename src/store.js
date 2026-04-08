@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     locale: localStorage.getItem('locale') || 'en',
-    isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false
+    isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false,
+    user: JSON.parse(localStorage.getItem('loggedInUser')) || null
   },
   mutations: {
     SET_LOCALE(state, locale) {
@@ -20,6 +21,14 @@ export default new Vuex.Store({
     SET_DARK_MODE(state, isDarkMode) {
       state.isDarkMode = isDarkMode;
       localStorage.setItem('isDarkMode', isDarkMode);
+    },
+    SET_USER(state, user) {
+      state.user = user;
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+    },
+    CLEAR_USER(state) {
+      state.user = null;
+      localStorage.removeItem('loggedInUser');
     }
   },
   actions: {
@@ -31,6 +40,12 @@ export default new Vuex.Store({
     },
     setDarkMode({ commit }, isDarkMode) {
       commit('SET_DARK_MODE', isDarkMode);
+    },
+    setUser({ commit }, user) {
+      commit('SET_USER', user);
+    },
+    logout({ commit }) {
+      commit('CLEAR_USER');
     }
   }
 });

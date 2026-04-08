@@ -41,7 +41,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import { i18n } from '@/i18n'; // Adjust this import according to your project structure
+import i18n from '@/i18n'; // Adjust this import according to your project structure
 import '@/assets/styles/SignupPage.css'; // Import the new CSS file
 
 export default {
