@@ -24,17 +24,30 @@
         </div>
         
         <div v-if="dropdownVisible" class="dropdown-menu">
-          <router-link to="/errorpage" class="dropdown-item">{{ $t('notificationSettings.invoices') }}</router-link>
-          <router-link to="/errorpage" class="dropdown-item">{{ $t('notificationSettings.reports') }}</router-link>
+          <router-link to="/invoices" class="dropdown-item">{{ $t('notificationSettings.invoices') }}</router-link>
+          <router-link to="/c2/reports" class="dropdown-item">{{ $t('notificationSettings.reports') }}</router-link>
         </div>
 
-        <router-link v-for="item in ['servicesLink', 'videos', 'affiliate', 'contactUs', 'permissions']" 
-                     :key="item" to="/errorpage" class="nav-item aactive">
-          <div class="icon-wrapper">
-            <img :src="getIcon(item)" class="nav-icon" />
-          </div>
-          <span>{{ $t(`notificationSettings.${item}`) }}</span>
-          <span v-if="item === 'contactUs'" class="badge">10+</span>
+        <router-link to="/c2/services" class="nav-item aactive">
+          <div class="icon-wrapper"><img :src="getIcon('servicesLink')" class="nav-icon" /></div>
+          <span>{{ $t('notificationSettings.servicesLink') }}</span>
+        </router-link>
+        <router-link to="/errorpage" class="nav-item aactive">
+          <div class="icon-wrapper"><img :src="getIcon('videos')" class="nav-icon" /></div>
+          <span>{{ $t('notificationSettings.videos') }}</span>
+        </router-link>
+        <router-link to="/errorpage" class="nav-item aactive">
+          <div class="icon-wrapper"><img :src="getIcon('affiliate')" class="nav-icon" /></div>
+          <span>{{ $t('notificationSettings.affiliate') }}</span>
+        </router-link>
+        <router-link to="/c2/contact" class="nav-item aactive">
+          <div class="icon-wrapper"><img :src="getIcon('contactUs')" class="nav-icon" /></div>
+          <span>{{ $t('notificationSettings.contactUs') }}</span>
+          <span class="badge">10+</span>
+        </router-link>
+        <router-link to="/c2/permissions" class="nav-item aactive">
+          <div class="icon-wrapper"><img :src="getIcon('permissions')" class="nav-icon" /></div>
+          <span>{{ $t('notificationSettings.permissions') }}</span>
         </router-link>
       </nav>
 
@@ -171,7 +184,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['toggleDarkMode', 'setLocale', 'logout']),
+    ...mapActions(['toggleDarkMode', 'setLocale']),
 
     loadUser() {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
