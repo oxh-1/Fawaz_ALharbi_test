@@ -1,519 +1,90 @@
-# Company 2 — Full System README
+# Fawaz Enterprise Platform (Company 2)
 
-> A complete multi-tenant SaaS platform for booking and merchant management.  
-> **Stack:** Vue 2 (Frontend) · PHP 8.1 + Laravel 10 (Backend) · MySQL 8.0 (Database) · XAMPP (Server)
+## 📌 Project Overview
+This project represents a full-stack, enterprise-grade monolithic application consisting of a **Vue.js 2 Options API Frontend** and a **Laravel REST API Backend**. The system features real-time notifications, unified reporting, seamless multi-tenancy, and advanced RBAC capabilities.
 
----
+## 🚀 Setup Instructions
 
-## 📋 Table of Contents
-
-1. [Project Structure](#project-structure)
-2. [Quick Start (XAMPP)](#quick-start)
-3. [Database Setup](#database-setup)
-4. [Backend Setup (Laravel)](#backend-setup)
-5. [Frontend Setup (Vue 2)](#frontend-setup)
-6. [Admin Account](#admin-account)
-7. [Virtual Host Setup](#virtual-host-setup)
-8. [API Documentation](#api-documentation)
-9. [Domain Management](#domain-management)
-10. [Deployment](#deployment)
-11. [Troubleshooting](#troubleshooting)
-
----
-
-## Project Structure
-
-```
-Fawaz_ALharbi_test/
-├── src/                        ← Vue 2 frontend source
-│   ├── components/
-│   │   ├── company2/
-│   │   │   ├── Company2Layout.vue
-│   │   │   └── pages/          ← 14 Company 2 pages
-│   │   ├── Login.vue
-│   │   ├── Dashboard.vue
-│   │   ├── NotificationSettings.vue
-│   │   └── ...
-│   ├── services/
-│   │   └── api.js              ← Frontend API service layer
-│   ├── router/index.js         ← Vue Router with guards
-│   ├── store.js                ← Vuex state
-│   └── i18n.js                 ← EN/AR translations
-├── backend/                    ← Laravel PHP API
-│   ├── app/
-│   │   ├── Http/Controllers/Api/
-│   │   ├── Http/Middleware/
-│   │   └── Models/
-│   ├── routes/api.php
-│   ├── public/                 ← Web root (Apache points here)
-│   └── .env.example
-├── database/
-│   ├── schema.sql              ← Complete MySQL schema (21 tables)
-│   └── seeds.sql               ← All seed data + admin account
-├── .env.local                  ← Vue frontend env
-└── README.md
-```
-
----
-
-## Quick Start
-
-### Prerequisites
-- [XAMPP](https://www.apachefriends.org/) 8.1+ (PHP 8.1, MySQL 8.0, Apache)
-- [Node.js](https://nodejs.org/) 16+ with npm/yarn
-- [Composer](https://getcomposer.org/) 2.0+
-- Git
-
-### Step 1 — Clone & Install
+### 1️⃣ Database Setup & Seeding
+1. Make sure your local **MySQL/XAMPP server** is running.
+2. Ensure you have created a database called `company2_db` (or whatever your `.env` DB_DATABASE is set to).
+3. Navigate to `backend-laravel/`:
 ```bash
-git clone https://github.com/your-repo/Fawaz_ALharbi_test.git
-cd Fawaz_ALharbi_test
-```
-
-### Step 2 — Start XAMPP
-1. Open XAMPP Control Panel  
-2. Start **Apache** and **MySQL**
-
----
-
-## Database Setup
-
-### A. Create the Database
-
-**Method 1 — phpMyAdmin (easiest):**
-1. Open http://localhost/phpmyadmin
-2. Click **New** in the left sidebar
-3. Database name: `company2_db`, Collation: `utf8mb4_unicode_ci`
-4. Click **Create**
-5. Select `company2_db` → click **Import** tab
-6. Choose `database/schema.sql` → click **Go**
-7. After schema import, repeat: **Import** → choose `database/seeds.sql` → **Go**
-
-**Method 2 — Command Line:**
-```bash
-# Windows XAMPP (adjust path to your XAMPP installation)
-C:\xampp\mysql\bin\mysql.exe -u root -e "CREATE DATABASE company2_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-C:\xampp\mysql\bin\mysql.exe -u root company2_db < database/schema.sql
-C:\xampp\mysql\bin\mysql.exe -u root company2_db < database/seeds.sql
-```
-
-**If MySQL has a password:**
-```bash
-C:\xampp\mysql\bin\mysql.exe -u root -p company2_db < database/schema.sql
-```
-
-### B. Verify Import
-In phpMyAdmin, select `company2_db`. You should see **21 tables**:
-`ads`, `audit_logs`, `bookings`, `categories`, `contact_messages`, `content_pages`, `domains`, `merchants`, `notification_settings`, `permissions`, `personal_access_tokens`, `pricing_plans`, `reviews`, `role_permissions`, `roles`, `services`, `settlements`, `settings`, `tenants`, `user_roles`, `users`
-
----
-
-## Backend Setup (Laravel)
-
-### Step 1 — Install Dependencies
-```bash
-cd backend
-composer install
-```
-
-### Step 2 — Configure Environment
-```bash
+cd backend-laravel
 cp .env.example .env
 php artisan key:generate
 ```
-
-Edit `.env`:
-```env
-DB_DATABASE=company2_db
-DB_USERNAME=root
-DB_PASSWORD=           # leave blank for default XAMPP
-
-APP_URL=http://localhost/backend/public
-```
-
-### Step 3 — Place Under XAMPP
-
-**Option A — XAMPP htdocs (simplest):**
-```
-Copy the entire `backend/` folder to:
-C:\xampp\htdocs\backend\
-```
-
-The API will be at: `http://localhost/backend/public/api`
-
-**Option B — Virtual Host (recommended):**  
-See [Virtual Host Setup](#virtual-host-setup) below.
-
-### Step 4 — Set Storage Permissions (Linux/Mac only)
+4. Reset and intelligently seed the massive database generated from the AI prompt:
 ```bash
-chmod -R 775 storage bootstrap/cache
+php artisan migrate:fresh --seed --force
 ```
+*Note: This command generates thousands of realistic data points across 10+ relational modules.*
 
-### Step 5 — Run Storage Link
+### 2️⃣ Running the Backend (Laravel)
 ```bash
-cd backend
-php artisan storage:link
+php artisan serve
 ```
+*Ensure it runs on `http://localhost:8000` to avoid CORS issues with the frontend.*
 
-### Step 6 — Test Backend
+### 3️⃣ Running the Frontend (Vue)
 ```bash
-curl http://localhost/backend/public/api/domain/check?host=localhost
-```
-Expected: `{"valid":true,"tenant_id":1,...}`
-
----
-
-## Frontend Setup (Vue 2)
-
-### Step 1 — Install Dependencies
-```bash
-# From project root
 npm install
-# OR
-yarn install
-```
-
-### Step 2 — Configure API URL
-Edit `.env.local` (create if not exists):
-```env
-VUE_APP_API_URL=http://localhost/backend/public/api
-VUE_APP_GOOGLE_CLIENT_ID=your-google-client-id
-```
-
-### Step 3 — Run Development Server
-```bash
 npm run serve
-# OR
-yarn serve
 ```
-
-Frontend available at: **http://localhost:8080**
-
-### Step 4 — Build for Production
-```bash
-npm run build
-# Output in ./dist/
-```
-
-Copy `dist/` contents to `C:\xampp\htdocs\company2\` for static hosting.
+*Ensure the App connects successfully. The frontend should run on `http://localhost:8080` or `8081`.*
 
 ---
 
-## Admin Account
-
-The seed data creates a default Super Admin:
-
-| Field    | Value                |
-|----------|----------------------|
-| Email    | `admin@company2.sa`  |
-| Password | `password`  (**Change immediately!**) |
-| Role     | Super Admin (bypasses all permission checks) |
-
-### Change Admin Password
-
-**Via phpMyAdmin:**
-1. Run this SQL in `company2_db`:
-```sql
-UPDATE users 
-SET password = '$2y$12$...' -- Use php -r "echo password_hash('YourNewPassword', PASSWORD_BCRYPT);"
-WHERE email = 'admin@company2.sa';
-```
-
-**Via artisan (backend/):**
-```bash
-php artisan tinker
->>> \App\Models\User::where('email','admin@company2.sa')->update(['password' => bcrypt('YourNewPassword@123')]);
-```
-
-### Admin Capabilities
-- ✅ Access ALL pages / modules
-- ✅ View and edit ANY user's data
-- ✅ Force-update merchants, bookings (even from other tenants)
-- ✅ View complete audit logs
-- ✅ Manage system domains
-- ✅ View global cross-tenant statistics
-- ✅ Bypass all role and permission checks
+## 🔐 Admin Credentials
+- **Email**: `admin@company2.com`
+- **Password**: `Admin123!`
+- **Role**: `super_admin`
 
 ---
 
-## Virtual Host Setup
+## 🏗️ Supported Modules
 
-### Apache Virtual Host (recommended for production-like dev)
+The system's modular architecture uses a highly abstract controller, **`C2PlatformController.php`**, that handles dynamic generation and CRUD manipulation across the architecture.
 
-**Step 1 — Edit XAMPP httpd-vhosts.conf:**
-```
-File: C:\xampp\apache\conf\extra\httpd-vhosts.conf
-```
-
-Add:
-```apache
-# Company 2 Backend API
-<VirtualHost *:80>
-    ServerName api.company2.local
-    DocumentRoot "C:/xampp/htdocs/backend/public"
-    <Directory "C:/xampp/htdocs/backend/public">
-        AllowOverride All
-        Require all granted
-    </Directory>
-    ErrorLog "logs/company2-api-error.log"
-    CustomLog "logs/company2-api-access.log" combined
-</VirtualHost>
-
-# Company 2 Frontend (built dist)
-<VirtualHost *:80>
-    ServerName company2.local
-    DocumentRoot "C:/xampp/htdocs/company2"
-    <Directory "C:/xampp/htdocs/company2">
-        AllowOverride All
-        Require all granted
-        # SPA routing — all 404s go to index.html
-        FallbackResource /index.html
-    </Directory>
-</VirtualHost>
-```
-
-**Step 2 — Edit Windows hosts file:**
-```
-File: C:\Windows\System32\drivers\etc\hosts
-```
-
-Add:
-```
-127.0.0.1    company2.local
-127.0.0.1    api.company2.local
-```
-
-**Step 3 — Update frontend .env.local:**
-```env
-VUE_APP_API_URL=http://api.company2.local/api
-```
-
-**Step 4 — Add domain to database:**
-```sql
-INSERT INTO domains (domain, tenant_id, type, is_primary, status)
-VALUES 
-  ('company2.local', 1, 'main', 1, 'active'),
-  ('api.company2.local', 1, 'main', 0, 'active');
-```
-
-**Step 5 — Restart Apache in XAMPP Control Panel**
+| Module | URL Slug | Database Hook | Status |
+|--------|---------|--------------|--------|
+| **Merchants** | `/c2/merchant` | `merchants` table | ✅ Fully Live |
+| **Categories** | `/c2/categories` | `categories` table | ✅ Fully Live |
+| **Services** | `/c2/services` | `services` table | ✅ Fully Live |
+| **Booking** | `/c2/booking` | `bookings` table | ✅ Fully Live |
+| **Reviews** | `/c2/reviews` | `reviews` table | ✅ Fully Live |
+| **Contact Us** | `/c2/contact` | `contact_messages` | ✅ Fully Live |
+| **Pricing** | `/c2/pricing` | `pricing_plans` | ✅ Fully Live |
+| **Ads** | `/c2/ads` | `ads` table | ✅ Fully Live |
+| **Content** | `/c2/content` | `content_pages` | ✅ Fully Live |
+| **Settlement** | `/c2/settlement` | `settlements` table | ✅ Fully Live |
+| **Settings** | `/c2/setting` | `c2_settings` table | ✅ Fully Live |
 
 ---
 
-## API Documentation
+## 📡 API Endpoints 
+The highly dynamic API controller supports generic mapping to any database table defined in the model allowed list (`backend-laravel/routes/api.php`):
 
-### Base URL
-```
-http://localhost/backend/public/api
-```
+```http
+GET    /api/c2/{type}          - Fetch listing of any module
+POST   /api/c2/{type}          - Create new record dynamically
+PUT    /api/c2/{type}/{id}     - Update parameters instantly
+DELETE /api/c2/{type}/{id}     - Hard-delete entity
 
-### Authentication
-All protected endpoints require Bearer token:
-```
-Authorization: Bearer {token}
-```
-
-### Auth Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/login` | Login with email/password |
-| POST | `/auth/register` | Register new account |
-| POST | `/auth/google` | Login with Google ID token |
-| GET  | `/auth/me` | Get current user |
-| POST | `/auth/logout` | Logout / revoke token |
-
-### Domain Validation
-```
-GET /api/domain/check?host=yourdomain.com
-```
-Returns `{"valid": true}` or `{"valid": false, "message": "..."}`.
-
-### Standard Resource Endpoints
-Each module supports: `GET /` · `POST /` · `GET /{id}` · `PUT /{id}` · `DELETE /{id}`
-
-| Module | Base Path | Special Endpoints |
-|--------|-----------|-------------------|
-| Merchants | `/merchants` | `PATCH /{id}/status` |
-| Categories | `/categories` | `POST /reorder` |
-| Services | `/services` | `PATCH /{id}/toggle` |
-| Bookings | `/bookings` | `PATCH /{id}/status`, `GET /calendar/{year}/{month}` |
-| Reviews | `/reviews` | `PATCH /{id}/moderate` |
-| Contact | `/contact` | `PATCH /{id}/read` |
-| Pricing | `/pricing` | `PATCH /{id}/toggle` |
-| Ads | `/ads` | `PATCH /{id}/toggle` |
-| Content | `/content` | `PATCH /{id}/publish` |
-| Settlements | `/settlements` | `POST /export` |
-| Reports | `/reports` | `/summary`, `/revenue`, `/bookings`, `/merchants` |
-| Permissions | `/permissions` | `/roles`, `/roles/{id}/sync` |
-| Notifications | `/notifications/settings` | `PUT` to update |
-| Settings | `/settings` | `/company`, `/password` |
-
-### Admin Endpoints (Super Admin only)
-```
-GET  /admin/users
-GET  /admin/users/{id}
-PUT  /admin/users/{id}
-PATCH /admin/users/{id}/status
-DELETE /admin/users/{id}
-GET  /admin/audit-logs
-GET  /admin/stats
-GET  /admin/tenants
-GET  /admin/domains
-POST /admin/domains
-DELETE /admin/domains/{id}
+GET    /api/c2/settings        - Fetch master platform settings
+PUT    /api/c2/settings        - Push modifications across configs
 ```
 
 ---
 
-## Domain Management
+## 🛠️ Troubleshooting
 
-The system validates every request's domain against the `domains` table.
+**1. "Network Error" on Frontend**
+Check `backend-laravel/.env`. Ensure `CORS_ALLOWED_ORIGINS` accurately reflects your Vue CLI local port (e.g. `http://localhost:8081`). Ensure `php artisan serve` is actually running.
 
-### How It Works
-1. User visits `http://unknown-domain.com`
-2. Vue frontend calls `GET /api/domain/check?host=unknown-domain.com`
-3. Backend queries `domains` table
-4. If not found → returns `{"valid": false}` → Vue redirects to `/404`
-5. If found → returns tenant data → app loads normally
+**2. "Target class [ControllerName] does not exist"**
+Depending on caching, you may need to clear routes. 
+Run: `php artisan route:clear` and `php artisan cache:clear`.
 
-### Adding a New Domain
-```sql
-INSERT INTO domains (domain, tenant_id, type, is_primary, status)
-VALUES ('yourclient.com', 1, 'custom', 0, 'active');
-```
-
-### Domain Types
-| Type | Example | Description |
-|------|---------|-------------|
-| `main` | `company2.sa` | Primary domain |
-| `subdomain` | `app.company2.sa` | Subdomain |
-| `custom` | `yourclient.com` | White-label domain |
-
----
-
-## Deployment
-
-### Export Database
-```bash
-# Export (from XAMPP)
-C:\xampp\mysql\bin\mysqldump.exe -u root company2_db > company2_backup.sql
-
-# Import on new server
-mysql -u root -p company2_db < company2_backup.sql
-```
-
-### Production Checklist
-- [ ] Change admin password
-- [ ] Set `APP_DEBUG=false` in backend `.env`
-- [ ] Set `APP_ENV=production`
-- [ ] Run `php artisan config:cache`
-- [ ] Run `php artisan route:cache`
-- [ ] Build Vue: `npm run build` and upload `dist/`
-- [ ] Update `SANCTUM_STATEFUL_DOMAINS` to production domain
-- [ ] Add production domain to `domains` table
-- [ ] Configure real Google OAuth credentials
-
----
-
-## Troubleshooting
-
-### ❌ "Domain not registered" error on localhost
-**Fix:** The `domains` table should already have `localhost`. Check:
-```sql
-SELECT * FROM domains WHERE domain = 'localhost';
-```
-If missing:
-```sql
-INSERT INTO domains (domain, tenant_id, type, is_primary, status)
-VALUES ('localhost', 1, 'main', 1, 'active');
-```
-
-### ❌ CORS error (Access-Control-Allow-Origin)
-**Fix:** Edit `backend/.env`:
-```env
-SANCTUM_STATEFUL_DOMAINS=localhost:8080,localhost
-CORS_ALLOWED_ORIGINS=http://localhost:8080
-```
-Then restart: `php artisan config:clear`
-
-### ❌ Apache shows 403 Forbidden on backend
-**Fix (XAMPP httpd.conf):** Find `<Directory "C:/xampp/htdocs">` and change:
-```apache
-# Old:
-Require local
-# New:
-Require all granted
-```
-
-### ❌ Laravel .htaccess not working
-**Fix:** In XAMPP `httpd.conf`, enable mod_rewrite:
-```apache
-LoadModule rewrite_module modules/mod_rewrite.so
-```
-Find the `<Directory>` block and set:
-```apache
-AllowOverride All
-```
-
-### ❌ "Base table not found" SQL errors
-**Fix:** Import schema first, then seeds:
-```bash
-mysql -u root company2_db < database/schema.sql
-mysql -u root company2_db < database/seeds.sql
-```
-
-### ❌ Vue router 404 on page refresh
-**Fix:** Add to Apache vhost (or .htaccess in dist folder):
-```apache
-FallbackResource /index.html
-```
-
-### ❌ Google login fails
-**Fix:** 
-1. Check `VUE_APP_GOOGLE_CLIENT_ID` in `.env.local`
-2. In Google Cloud Console, add `http://localhost:8080` to Authorized JavaScript Origins
-3. Add `http://localhost:8080/auth/google/callback` to Authorized Redirect URIs
-
-### ❌ Token expired / 401 errors
-**Fix:** The user needs to re-login. The frontend's `api.js` reads the token from `localStorage`. Clear it:
-```javascript
-localStorage.removeItem('api_token');
-```
-
-### ❌ Missing PHP extensions
-**Required extensions:** `pdo`, `pdo_mysql`, `mbstring`, `openssl`, `json`, `tokenizer`, `xml`
-
-Enable in `C:\xampp\php\php.ini` (uncomment):
-```ini
-extension=pdo_mysql
-extension=mbstring
-extension=openssl
-```
-
----
-
-## ERD Summary
-
-```
-tenants ─────┬─── domains        (1:N)
-             ├─── users          (1:N)
-             ├─── categories     (1:N)
-             ├─── merchants ─────┬─── services ──── bookings
-             │                   ├─── reviews
-             │                   └─── settlements
-             ├─── pricing_plans  (1:N)
-             ├─── ads            (1:N)
-             ├─── content_pages  (1:N)
-             └─── settings       (1:N)
-
-users ───────┬─── user_roles ─── roles ─── role_permissions ─── permissions
-             ├─── notification_settings
-             └─── audit_logs
-
-contact_messages → tenants
-```
-
----
-
-*Last updated: April 2026 | Company 2 v1.0*
+**3. Module Data Not Showing Up**
+We injected a unified `DemoDataSeeder`. Ensure you ran `php artisan migrate:fresh --seed`. Check the target URLs in the network inspector to make sure `apiClient` fired properly.

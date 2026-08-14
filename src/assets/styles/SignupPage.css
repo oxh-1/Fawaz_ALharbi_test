@@ -55,12 +55,14 @@
 }
 
 /* responsive main logo */
+.brand-logo,
 .logo-img {
-  width: clamp(160px, 30vw, 350px); /* was fixed 350px */
+  width: clamp(160px, 30vw, 350px);
   height: auto;
   max-width: 100%;
   display: block;
   margin: 0 auto 10px;
+  object-fit: contain;
 }
 form {
   width: min(640px, 60%); /* keeps constraint but responsive */
