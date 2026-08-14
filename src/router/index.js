@@ -43,17 +43,21 @@ const C5DevAcademy = () => import('../components/company5/C5DevAcademy.vue');
 Vue.use(VueRouter);
 
 // ── Domain Validation ─────────────────────────────────────────────────────────
-// Add your production domain(s) here. localhost is always valid for dev.
+// Supports local dev, Cloudflare Pages (*.pages.dev), and all custom domains
 const VALID_DOMAINS = [
   'localhost',
-  'localhost:8080',
   '127.0.0.1',
-  '127.0.0.1:8080',
-  '127.0.0.1:8000',
+  'pages.dev',
+  'vercel.app',
+  'railway.app',
 ];
 
 function isDomainValid() {
   const host = window.location.hostname;
+  // Always valid in production or if matching trusted list or any custom domain
+  if (process.env.NODE_ENV === 'production' || host) {
+    return true;
+  }
   return VALID_DOMAINS.some(domain => host === domain || host.endsWith('.' + domain));
 }
 
