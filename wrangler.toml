@@ -10,4 +10,4 @@ not_found_handling = "single-page-application"
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "fawaz-db"
-# database_id = "YOUR_CLOUDFLARE_D1_DATABASE_ID"
+# database_id = "48bdb38c-e07d-4407-a9c2-33b882b1450f"
