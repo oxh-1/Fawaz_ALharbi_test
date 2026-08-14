@@ -135,8 +135,6 @@ INSERT INTO bookings (tenant_id, service_id, merchant_id, customer_name, custome
 (1, 4, 6, 'Noura K.',    'noura@k.com',    '2025-04-15', '09:30:00', 'confirmed',  80.00);
 
 -- REVIEWS
-
-
 INSERT INTO reviews (tenant_id, merchant_id, author_name, author_email, rating, text, status) VALUES
 (1, 2, 'Ahmed S.',   'ahmed@mail.com', 5, 'Amazing food and super fast delivery! Highly recommended.', 'approved'),
 (1, 6, 'Sara M.',    'sara@ex.com',    4, 'Great selection of styles. The staff was very helpful.',    'pending'),
@@ -144,11 +142,13 @@ INSERT INTO reviews (tenant_id, merchant_id, author_name, author_email, rating, 
 (1, 4, 'Fatima R.',  'fatima@r.com',   5, 'Professional doctors and clean environment. 10/10!',        'approved'),
 (1, 5, 'Khalid A.',  'k@corp.sa',      1, 'Spam review with inappropriate content.',                   'rejected');
 
+-- CONTACT MESSAGES
 INSERT INTO contact_messages (tenant_id, name, email, subject, message, is_read) VALUES
 (1, 'Ahmed Al-Harbi', 'ahmed@mail.com', 'Issue with booking',     'I booked a session yesterday but received no confirmation email. Can you please check the status of booking #1023?', 0),
 (1, 'Sara Khalid',    'sara@ex.com',    'Partnership inquiry',    'We represent a chain of 15 restaurants and would like to discuss a bulk merchant registration.', 1),
 (1, 'Omar Faris',     'omar@corp.sa',   'Billing question',       'I was charged twice for the same subscription. Please review transaction ID TX-8847.', 0);
 
+-- PRICING PLANS
 INSERT INTO pricing_plans (tenant_id, name, slug, description, monthly_price, annual_price, features, max_merchants, max_bookings, is_featured, is_active, sort_order) VALUES
 (1, 'Basic', 'basic', 'Perfect for small businesses just starting out.', 49.00, 470.00,
  '[{"label":"Up to 5 merchants","included":true},{"label":"100 bookings/month","included":true},{"label":"Basic analytics","included":true},{"label":"Email support","included":true},{"label":"Custom domain","included":false},{"label":"API access","included":false}]',
@@ -160,12 +160,14 @@ INSERT INTO pricing_plans (tenant_id, name, slug, description, monthly_price, an
  '[{"label":"Unlimited merchants","included":true},{"label":"Unlimited bookings","included":true},{"label":"Full analytics suite","included":true},{"label":"24/7 dedicated support","included":true},{"label":"Custom domain","included":true},{"label":"API access","included":true}]',
  NULL, NULL, 0, 0, 3);
 
+-- ADS
 INSERT INTO ads (tenant_id, name, type, start_date, end_date, impressions, clicks, status) VALUES
 (1, 'Summer Sale 2025',    'banner',    '2025-06-01', '2025-06-30', 45200, 1830, 'scheduled'),
 (1, 'New Merchant Promo',  'sponsored', '2025-04-01', '2025-04-15', 18700,  920, 'active'),
 (1, 'App Download Push',   'push',      '2025-03-10', '2025-03-25', 32000, 2450, 'inactive'),
 (1, 'Eid Offers',          'video',     '2025-03-28', '2025-04-05', 61000, 4200, 'active');
 
+-- CONTENT PAGES
 INSERT INTO content_pages (tenant_id, title, slug, content, meta_description, status) VALUES
 (1, 'About Us',       'about-us',  'We are Company 2, a leading platform connecting merchants and customers across Saudi Arabia.', 'Learn more about Company 2 and our mission.', 'published'),
 (1, 'Terms of Service','terms',    'By using our platform you agree to these terms and conditions...', 'Company 2 terms of service.', 'published'),
@@ -173,6 +175,7 @@ INSERT INTO content_pages (tenant_id, title, slug, content, meta_description, st
 (1, 'FAQ',            'faq',       'Frequently Asked Questions about Company 2...', 'Get answers to common questions.', 'draft'),
 (1, 'Careers',        'careers',   'Join our growing team and help shape the future of commerce in Saudi Arabia...', 'Career opportunities at Company 2.', 'draft');
 
+-- SETTLEMENTS
 INSERT INTO settlements (tenant_id, merchant_id, reference_no, amount, fee, net_amount, method, status, period_start, period_end, paid_at) VALUES
 (1, 2, 'STL-301', 8450.00, 845.00, 7605.00, 'bank_transfer', 'paid',       '2025-03-01', '2025-03-31', '2025-04-01 10:00:00'),
 (1, 1, 'STL-302', 3200.00, 320.00, 2880.00, 'bank_transfer', 'paid',       '2025-03-01', '2025-03-31', '2025-04-01 10:00:00'),
@@ -182,6 +185,7 @@ INSERT INTO settlements (tenant_id, merchant_id, reference_no, amount, fee, net_
 (1, 4, 'STL-306', 6300.00, 630.00, 5670.00, 'bank_transfer', 'paid',       '2025-03-01', '2025-03-31', '2025-03-30 09:00:00'),
 (1, 2, 'STL-307', 7100.00, 710.00, 6390.00, 'bank_transfer', 'paid',       '2025-02-01', '2025-02-28', '2025-03-01 10:00:00');
 
+-- NOTIFICATION SETTINGS
 INSERT INTO notification_settings (user_id, tenant_id, type, label, channel, is_enabled) VALUES
 (1, 1, 'new_booking',   'New Booking',           'email',  1),
 (1, 1, 'new_booking',   'New Booking',           'in_app', 1),
@@ -191,6 +195,7 @@ INSERT INTO notification_settings (user_id, tenant_id, type, label, channel, is_
 (1, 1, 'merchant_reg',  'Merchant Registration', 'email',  0),
 (1, 1, 'billing',       'Billing Created',       'email',  1);
 
+-- SETTINGS
 INSERT INTO settings (tenant_id, key, value, type, group_name) VALUES
 (1, 'company_name',       'Company 2',              'string',  'general'),
 (1, 'company_email',      'info@company2.sa',       'string',  'general'),

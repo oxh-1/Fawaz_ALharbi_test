@@ -45,12 +45,14 @@
   
 
 /* responsive main logo and side image */
+.brand-logo,
 .logo-img {
-  width: clamp(140px, 30vw, 350px); /* replace fixed 350px */
+  width: clamp(140px, 30vw, 350px);
   height: auto;
   max-width: 100%;
   display: block;
   margin: 0 auto 10px;
+  object-fit: contain;
 }
 .side-panel img {
   width: clamp(80px, 18vw, 200px);

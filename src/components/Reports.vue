@@ -2,25 +2,25 @@
   <div :class="['reports-container', { dark: isDarkMode }]">
     <aside :class="['sidebar', { dark: isDarkMode }]">
       <div class="logo-section">
-        <img src="@/assets/Gittax/logo1.png" alt="Logo" class="logo" />
-        <h1>Company2</h1>
+        <img src="@/assets/Gittax/logo1.png" alt="Brand Logo" class="brand-logo" />
+        <h1>Fawaz Platform</h1>
       </div>
       <nav class="navigation">
         <router-link to="/dashboard">          <img src="@/assets/L3bnaIMG/homeL3.png" alt="Home Icon" class="nav-icon" />
 {{ $t('notificationSettings.home') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/profL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.merchant') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/catL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.categories') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/SerL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.servicesLink') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/BookingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.booking') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/ReviewsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.reviews') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/ContactL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.contactUs') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/pricingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.pricing') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/AdsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.ads') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/ContentL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.content') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/SerL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.settlement') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/ReportsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.reports') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/PermisionsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.permissions') }}</router-link>
-        <router-link to="/errorpage"><img src="@/assets/L3bnaIMG/SettingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.setting') }}</router-link>
+        <router-link to="/c2/merchant"><img src="@/assets/L3bnaIMG/profL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.merchant') }}</router-link>
+        <router-link to="/c2/categories"><img src="@/assets/L3bnaIMG/catL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.categories') }}</router-link>
+        <router-link to="/c2/services"><img src="@/assets/L3bnaIMG/SerL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.servicesLink') }}</router-link>
+        <router-link to="/c2/booking"><img src="@/assets/L3bnaIMG/BookingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.booking') }}</router-link>
+        <router-link to="/c2/reviews"><img src="@/assets/L3bnaIMG/ReviewsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.reviews') }}</router-link>
+        <router-link to="/c2/contact"><img src="@/assets/L3bnaIMG/ContactL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.contactUs') }}</router-link>
+        <router-link to="/c2/pricing"><img src="@/assets/L3bnaIMG/pricingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.pricing') }}</router-link>
+        <router-link to="/c2/ads"><img src="@/assets/L3bnaIMG/AdsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.ads') }}</router-link>
+        <router-link to="/c2/content"><img src="@/assets/L3bnaIMG/ContentL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.content') }}</router-link>
+        <router-link to="/c2/settlement"><img src="@/assets/L3bnaIMG/SerL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.settlement') }}</router-link>
+        <router-link to="/c2/reports"><img src="@/assets/L3bnaIMG/ReportsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.reports') }}</router-link>
+        <router-link to="/c2/permissions"><img src="@/assets/L3bnaIMG/PermisionsL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.permissions') }}</router-link>
+        <router-link to="/c2/settings"><img src="@/assets/L3bnaIMG/SettingL3.png" alt="Home Icon" class="nav-icon" />{{ $t('notificationSettings.setting') }}</router-link>
       </nav>
       <div class="settings">
         <div class="language-toggle">
@@ -102,8 +102,9 @@ export default {
   },
   created() {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser && loggedInUser.username) {
-      this.username = loggedInUser.username;
+    if (loggedInUser) {
+      // Google users have .name, manual signup users have .username
+      this.username = loggedInUser.name || loggedInUser.username || 'User';
     }
   },
   computed: {
@@ -248,18 +249,16 @@ export default {
 }
 
 .export-button {
-    margin-right: 10px;
- width: Fixed (170px)px;
-height: Fixed (48px)px;
-top: 75px;
-left: 1510px;
-padding: 0px 15px 0px 15px;
-gap: 8px;
-border-radius: 10px 10px 10px 10px;
-
+  margin-right: 10px;
+  width: 170px;
+  height: 48px;
+  padding: 0px 15px;
+  gap: 8px;
+  border-radius: 10px;
   padding: 10px 20px;
   background-color: #ffcc00;
   border: none;
+  cursor: pointer;
 }
 
 .reports {

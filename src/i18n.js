@@ -72,9 +72,8 @@ const messages = {
       setting: 'Setting',
       reports: 'Reports',
       reviews: 'Reviews',
-      logout:'logout',
-      profile:'profile'
-
+      logout: 'logout',
+      profile: 'profile'
     },
     addTestimonial: {
         title: "Add New Testimonial",
@@ -197,8 +196,8 @@ const messages = {
       setting: 'الإعدادات',
       reports: 'التقارير',
       reviews: 'المراجعات',
-      logout:'تسجيل الخروج',
-      profile:'حساب تعريفي'
+      logout: 'تسجيل الخروج',
+      profile: 'حساب تعريفي'
     },
     reports: {
       title: 'التقارير',

@@ -3,27 +3,25 @@
     <div class="container-floud">
       <div class="col-xs-12 ground-color text-center">
         <div class="container-error-404">
-          <div class="clip">
-            <div class="shadow">
-              <span class="digit thirdDigit"></span>
-            </div>
+          <div class="clip"><div class="shadow"><span class="digit thirdDigit"></span></div></div>
+          <div class="clip"><div class="shadow"><span class="digit secondDigit"></span></div></div>
+          <div class="clip"><div class="shadow"><span class="digit firstDigit"></span></div></div>
+          <div class="msg">OH!<span class="triangle"></span></div>
+        </div>
+        <h2 class="h1">Sorry! Page Not Found</h2>
+        <p class="error-detail">The page or domain you are looking for does not exist.</p>
+        <div class="error-info" v-if="badDomain || badRoute">
+          <div v-if="badDomain" class="error-chip domain-chip">
+            🌐 Unknown domain: <strong>{{ badDomain }}</strong>
           </div>
-          <div class="clip">
-            <div class="shadow">
-              <span class="digit secondDigit"></span>
-            </div>
-          </div>
-          <div class="clip">
-            <div class="shadow">
-              <span class="digit firstDigit"></span>
-            </div>
-          </div>
-          <div class="msg">
-            OH!<span class="triangle"></span>
+          <div v-if="badRoute" class="error-chip route-chip">
+            🔗 Invalid route: <strong>{{ badRoute }}</strong>
           </div>
         </div>
-        <h2 class="h1">Sorry! Page not found</h2>
-        <button @click="goToDashboard" class="back-button">Go to Dashboard</button>
+        <div class="error-actions">
+          <button @click="goHome" class="back-button">🏠 Go to Home</button>
+          <button @click="goBack" class="back-button secondary-btn">← Go Back</button>
+        </div>
       </div>
     </div>
   </div>
@@ -32,48 +30,57 @@
 <script>
 export default {
   name: 'ErrorPage',
+  data() {
+    return {
+      badDomain: '',
+      badRoute: ''
+    };
+  },
   mounted() {
-    this.randomNum = () => Math.floor(Math.random() * 9) + 1;
+    // Detect invalid domain
+    const validDomains = ['localhost', '127.0.0.1'];
+    const host = window.location.hostname;
+    if (!validDomains.some(d => host === d || host.endsWith('.' + d))) {
+      this.badDomain = host;
+    }
 
-    let loop1, loop2, loop3, i = 0;
+    // Detect invalid route
+    const knownRoutes = [
+      '/login', '/signup', '/dashboard', '/notification-settings', '/reports',
+      '/profile', '/settings', '/invoices', '/fawaz', '/errorpage', '/404',
+      '/c2/home', '/c2/merchant', '/c2/categories', '/c2/services', '/c2/booking',
+      '/c2/reviews', '/c2/contact', '/c2/pricing', '/c2/ads', '/c2/content',
+      '/c2/settlement', '/c2/reports', '/c2/permissions', '/c2/settings', '/c2'
+    ];
+    const currentPath = this.$route ? this.$route.path : window.location.pathname;
+    if (!knownRoutes.includes(currentPath) && currentPath !== '/404') {
+      this.badRoute = currentPath;
+    }
+
+    // Log for debugging
+    if (this.badDomain) console.error(`[ErrorPage] Invalid domain: ${this.badDomain}`);
+    if (this.badRoute) console.error(`[ErrorPage] Invalid route: ${this.badRoute}`);
+
+    // Animated 404 digits
+    this.randomNum = () => Math.floor(Math.random() * 9) + 1;
+    let i = 0;
     const time = 30;
     const selector3 = document.querySelector('.thirdDigit');
     const selector2 = document.querySelector('.secondDigit');
     const selector1 = document.querySelector('.firstDigit');
 
-    loop3 = setInterval(() => {
-      if (i > 40) {
-        clearInterval(loop3);
-        selector3.textContent = 4;
-      } else {
-        selector3.textContent = this.randomNum();
-        i++;
-      }
-    }, time);
-
-    loop2 = setInterval(() => {
-      if (i > 80) {
-        clearInterval(loop2);
-        selector2.textContent = 0;
-      } else {
-        selector2.textContent = this.randomNum();
-        i++;
-      }
-    }, time);
-
-    loop1 = setInterval(() => {
-      if (i > 100) {
-        clearInterval(loop1);
-        selector1.textContent = 4;
-      } else {
-        selector1.textContent = this.randomNum();
-        i++;
-      }
-    }, time);
+    const loop3 = setInterval(() => { if (i > 40) { clearInterval(loop3); selector3.textContent = 4; } else { selector3.textContent = this.randomNum(); i++; } }, time);
+    const loop2 = setInterval(() => { if (i > 80) { clearInterval(loop2); selector2.textContent = 0; } else { selector2.textContent = this.randomNum(); i++; } }, time);
+    const loop1 = setInterval(() => { if (i > 100) { clearInterval(loop1); selector1.textContent = 4; } else { selector1.textContent = this.randomNum(); i++; } }, time);
   },
   methods: {
-    goToDashboard() {
-      this.$router.push('/notification-settings');
+    goHome() {
+      const user = localStorage.getItem('loggedInUser');
+      this.$router.push(user ? '/dashboard' : '/login');
+    },
+    goBack() {
+      if (window.history.length > 1) this.$router.go(-1);
+      else this.goHome();
     }
   }
 };
@@ -81,6 +88,57 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Anton|Passion+One|PT+Sans+Caption');
+
+.error-detail {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin: 8px 0 16px;
+}
+
+.error-info {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 12px 0 20px;
+}
+
+.error-chip {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.domain-chip {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #e74c3c;
+}
+
+.route-chip {
+  background: #fff8e1;
+  color: #f39c12;
+  border: 1px solid #f39c12;
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.secondary-btn {
+  background: transparent !important;
+  color: #275559 !important;
+  border: 2px solid #275559 !important;
+}
+
+.secondary-btn:hover {
+  background: rgba(39,85,89,0.1) !important;
+}
 
 body {
   font-family: 'PT Sans Caption', sans-serif, 'arial', 'Times New Roman';
