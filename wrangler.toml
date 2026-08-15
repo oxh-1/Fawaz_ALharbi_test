@@ -1,5 +1,7 @@
 name = "fawazalharbi"
 compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+main = "api/index.js"
 
 [assets]
 directory = "./dist"
@@ -8,5 +10,12 @@ not_found_handling = "single-page-application"
 # Cloudflare D1 Database Binding
 [[d1_databases]]
 binding = "DB"
-database_name = "fawaz-db"
+database_name = "fawaz_db"
 database_id = "48bdb38c-e07d-4407-a9c2-33b882b1450f"
+
+# Production environment variables (set secrets via: wrangler secret put JWT_SECRET)
+[vars]
+APP_NAME = "Fawaz Platform"
+ADMIN_EMAIL = "me@fawazalharbi.dev"
+CONTACT_EMAIL = "me@fawazalharbi.dev"
+APP_ENV = "production"

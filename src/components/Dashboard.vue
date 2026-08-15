@@ -63,6 +63,10 @@
               <span class="h-icon">🏢</span>
               <span>Company 4 (Real Estate)</span>
             </router-link>
+            <a href="mailto:me@fawazalharbi.dev" class="hero-btn contact-me-btn" title="Send email to me@fawazalharbi.dev">
+              <span class="h-icon">✉️</span>
+              <span>Contact Me</span>
+            </a>
             <router-link to="/c5/academy" class="hero-btn c5-btn">
               <span class="h-icon">🎓</span>
               <span>Company 5 (Dev Academy)</span>
@@ -169,12 +173,12 @@
           </div>
           <div class="status-rows">
             <div class="status-row">
-              <span>Laravel API Server (127.0.0.1:8000)</span>
-              <span class="status-tag online">Connected 99.9%</span>
+              <span>Cloudflare Workers API</span>
+              <span class="status-tag online">Edge 99.99%</span>
             </div>
             <div class="status-row">
-              <span>MySQL Database & Migration</span>
-              <span class="status-tag online">Synced</span>
+              <span>Cloudflare D1 (fawaz_db)</span>
+              <span class="status-tag online">Connected ✓</span>
             </div>
             <div class="status-row">
               <span>Google SSO & OAuth2</span>
@@ -184,10 +188,55 @@
               <span>Multi-Tenant Context</span>
               <span class="status-tag tenant">Tenant #1 (Active)</span>
             </div>
+            <div class="status-row">
+              <span>IP Tracking</span>
+              <span class="status-tag online">CF-Connecting-IP ✓</span>
+            </div>
           </div>
           <div class="system-actions">
             <button class="status-btn" @click="navigateTo('settings')">⚙️ System Preferences</button>
             <button class="status-btn" @click="navigateTo('c2/reports')">📊 Export Audit Log</button>
+          </div>
+        </div>
+
+        <!-- Admin-only: User IP Monitor -->
+        <div v-if="isAdmin" class="ip-monitor-box">
+          <div class="box-header">
+            <h3 class="box-title">🌐 User IP Monitor</h3>
+            <span class="admin-only-badge">Admin Only</span>
+          </div>
+          <div v-if="isLoadingUsers" class="ip-loading">Loading user data...</div>
+          <div v-else-if="adminUsers.length === 0" class="ip-empty">No user login data available yet.</div>
+          <div v-else class="ip-table-wrapper">
+            <table class="ip-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Last IP</th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="u in adminUsers" :key="u.id" class="ip-row">
+                  <td>
+                    <div class="ip-user-cell">
+                      <span v-if="u.is_super_admin" class="ip-admin-crown">👑</span>
+                      {{ u.name }}
+                    </div>
+                  </td>
+                  <td class="ip-email">{{ u.email }}</td>
+                  <td>
+                    <code class="ip-address" :class="{ 'ip-unknown': !u.last_login_ip }">{{ u.last_login_ip || '—' }}</code>
+                  </td>
+                  <td class="ip-date">{{ formatDate(u.last_login_at) }}</td>
+                  <td>
+                    <span class="ip-status-tag" :class="'ip-status-' + u.status">{{ u.status }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -207,7 +256,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { merchantApi, bookingApi, settlementApi } from '@/services/api';
+import { merchantApi, bookingApi, settlementApi, adminApi } from '@/services/api';
 import C2ChatWidget from './company2/components/C2ChatWidget.vue';
 
 export default {
@@ -217,6 +266,8 @@ export default {
     return {
       isChatOpen: false,
       defaultAvatar: require('@/assets/Gittax/avatar.png'),
+      adminUsers: [],
+      isLoadingUsers: false,
       kpis: [
         { label: 'Active Merchants', value: '10', trend: '+12% this month', icon: '🏪', bg: 'rgba(0, 170, 255, 0.15)' },
         { label: 'Monthly Bookings', value: '185', trend: '+28% growth', icon: '🎟️', bg: 'rgba(147, 51, 234, 0.15)' },
@@ -381,14 +432,19 @@ export default {
     },
     isAdmin() {
       if (!this.currentUser) return true;
-      return this.currentUser.is_super_admin || this.currentUser.role === 'admin' || this.currentUser.email === 'admin@company2.com';
+      return (
+        this.currentUser.is_super_admin ||
+        this.currentUser.role === 'admin' ||
+        this.currentUser.email === 'admin@company2.com' ||
+        this.currentUser.email === 'me@fawazalharbi.dev'
+      );
     },
     isArabic() {
       return this.locale === 'ar' || (this.$i18n && this.$i18n.locale === 'ar');
     }
   },
   async mounted() {
-    // Attempt to load live counts from backend
+    // Load live KPI counts from backend
     try {
       const [m, b, s] = await Promise.all([
         merchantApi.list().catch(() => null),
@@ -411,7 +467,12 @@ export default {
         }
       }
     } catch (e) {
-      console.warn('Dashboard stats fallback to default demo numbers');
+      console.warn('Dashboard KPI stats fallback to default demo numbers');
+    }
+
+    // Load user IP data for admin
+    if (this.isAdmin) {
+      this.fetchAdminUsers();
     }
   },
   methods: {
@@ -432,7 +493,29 @@ export default {
       } finally {
         this.$router.push('/login');
       }
-    }
+    },
+    async fetchAdminUsers() {
+      this.isLoadingUsers = true;
+      try {
+        const res = await adminApi.users({ limit: 20 });
+        const users = res?.data?.data || res?.data || res || [];
+        this.adminUsers = Array.isArray(users) ? users : [];
+      } catch (e) {
+        console.warn('Could not load admin user list:', e?.message);
+        this.adminUsers = [];
+      } finally {
+        this.isLoadingUsers = false;
+      }
+    },
+    formatDate(dateStr) {
+      if (!dateStr) return '—';
+      try {
+        return new Date(dateStr).toLocaleString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+        });
+      } catch { return dateStr; }
+    },
   }
 };
 </script>
@@ -995,6 +1078,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  align-items: start;
 }
 @media (max-width: 900px) {
   .bottom-grid {
@@ -1212,4 +1296,164 @@ export default {
     padding: 12px 16px;
   }
 }
+
+/* ─── Contact Me Button ──────────────────────────────────────────────────── */
+.hero-btn.contact-me-btn {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+}
+.hero-btn.contact-me-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.45);
+  filter: brightness(1.08);
+}
+
+/* ─── IP Monitor Box ─────────────────────────────────────────────────────── */
+.ip-monitor-box {
+  grid-column: 1 / -1;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+.dark .ip-monitor-box {
+  background: #1e1e2e;
+  border-color: #2d3748;
+}
+
+.admin-only-badge {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ip-loading,
+.ip-empty {
+  padding: 16px 0;
+  color: #64748b;
+  font-size: 0.875rem;
+  text-align: center;
+}
+.dark .ip-loading,
+.dark .ip-empty {
+  color: #94a3b8;
+}
+
+.ip-table-wrapper {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.ip-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.ip-table thead th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+.dark .ip-table thead th {
+  color: #94a3b8;
+  border-bottom-color: #2d3748;
+}
+
+.ip-row {
+  transition: background 0.15s;
+}
+.ip-row:hover {
+  background: #f8fafc;
+}
+.dark .ip-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.ip-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+.dark .ip-table tbody td {
+  border-bottom-color: #1a1a2e;
+}
+
+.ip-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.ip-admin-crown {
+  font-size: 0.9rem;
+}
+
+.ip-email {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+.dark .ip-email {
+  color: #94a3b8;
+}
+
+.ip-address {
+  background: #0f172a;
+  color: #4ade80;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+.dark .ip-address {
+  background: #0d1117;
+  color: #4ade80;
+}
+.ip-address.ip-unknown {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+.dark .ip-address.ip-unknown {
+  background: #1e293b;
+}
+
+.ip-date {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+.dark .ip-date {
+  color: #94a3b8;
+}
+
+.ip-status-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+  text-transform: capitalize;
+}
+.ip-status-active   { background: #dcfce7; color: #166534; }
+.ip-status-inactive { background: #fef3c7; color: #92400e; }
+.ip-status-banned   { background: #fee2e2; color: #991b1b; }
+.dark .ip-status-active   { background: rgba(34,197,94,0.15);  color: #4ade80; }
+.dark .ip-status-inactive { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.dark .ip-status-banned   { background: rgba(239,68,68,0.15);  color: #f87171; }
 </style>

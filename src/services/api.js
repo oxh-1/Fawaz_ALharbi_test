@@ -1,7 +1,9 @@
 /**
- * Company 2 — Frontend API Service Layer
+ * Fawaz Platform — Frontend API Service Layer
  * Centralized HTTP client with global error handling, retries, and logging.
  * Base URL reads from Vue environment variable: VUE_APP_API_URL
+ * Production: connects to Cloudflare Workers at /api (same domain, no CORS)
+ * Local dev:  wrangler dev serves Workers + static at http://localhost:8787
  */
 
 import axios from 'axios';
@@ -10,7 +12,9 @@ import axios from 'axios';
 // AXIOS INSTANCE CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
 const apiClient = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8000/api',
+  // In production on Cloudflare, the Workers API is at /api (same origin — no CORS)
+  // In local dev with wrangler dev, it's also at /api via the same localhost port
+  baseURL: process.env.VUE_APP_API_URL || '/api',
   timeout: parseInt(process.env.VUE_APP_API_TIMEOUT) || 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -350,6 +354,8 @@ export const adminApi = {
   domains:          ()            => apiClient.get('admin/domains'),
   addDomain:        (data)        => apiClient.post('admin/domains', data),
   deleteDomain:     (id)          => apiClient.delete(`admin/domains/${id}`),
+  // Returns users with last_login_ip field (from Cloudflare D1 audit_logs)
+  userIps:          (limit = 50)  => apiClient.get('admin/users', { params: { limit, offset: 0 } }),
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
