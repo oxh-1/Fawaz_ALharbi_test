@@ -4,13 +4,13 @@
     <div class="ai-chat-header">
       <div class="ai-header-info">
         <div class="ai-avatar" :class="{ speaking: isSpeaking }">
-          {{ isSpeaking ? '🗣️' : '🤖' }}
+          {{ currentAssistantIcon }}
         </div>
         <div>
-          <h4 class="ai-title">Fawaz AI Assistant</h4>
+          <h4 class="ai-title">{{ currentAssistantTitle }}</h4>
           <span class="ai-status">
             <span class="pulse-dot"></span>
-            {{ isSpeaking ? 'Speaking to you...' : isListening ? 'Listening to your voice...' : 'Online • Talk with Voice & Text' }}
+            {{ isSpeaking ? 'Speaking to you...' : isListening ? 'Listening to your voice...' : 'Cloudflare AI & OpenAI • Active' }}
           </span>
         </div>
       </div>
@@ -32,10 +32,24 @@
       </div>
     </div>
 
+    <!-- Specialized Assistant Mode Selector Tabs -->
+    <div class="assistant-tabs-bar">
+      <button
+        v-for="a in assistantsList"
+        :key="a.id"
+        class="assistant-tab-btn"
+        :class="{ active: activeAssistant === a.id }"
+        @click="selectAssistant(a.id)"
+      >
+        <span>{{ a.icon }}</span>
+        <span>{{ a.shortLabel }}</span>
+      </button>
+    </div>
+
     <!-- Suggested Quick Prompts -->
     <div class="ai-quick-prompts">
       <button
-        v-for="(p, i) in quickPrompts"
+        v-for="(p, i) in currentQuickPrompts"
         :key="i"
         class="prompt-chip"
         @click="sendPrompt(p.text)"
@@ -167,12 +181,39 @@ export default {
       autoSpeak: true,
       recognition: null,
       userId: null,
-      quickPrompts: [
-        { icon: '👋', label: 'How is business today?', text: 'Hello! How is everything going on the platform today?' },
-        { icon: '📈', label: 'Monthly Revenue', text: 'What is our current monthly revenue and performance?' },
-        { icon: '🎟️', label: 'Check Bookings', text: 'Do we have any pending or confirmed bookings?' },
-        { icon: '👥', label: 'Top Customers', text: 'Tell me about our top customers and VIP tier.' },
-      ]
+      activeAssistant: 'booking',
+      assistantsList: [
+        { id: 'booking', icon: '🎟️', shortLabel: 'Booking', title: 'AI Booking Assistant' },
+        { id: 'stock', icon: '📈', shortLabel: 'Stock AI', title: 'AI Stock Prediction (Non-Financial Advice)' },
+        { id: 'real_estate', icon: '💎', shortLabel: 'Real Estate', title: 'AI Real Estate Analyzer' },
+        { id: 'dev_tutor', icon: '🎓', shortLabel: 'Dev Tutor', title: 'AI Developer Tutor' },
+      ],
+      quickPromptsMap: {
+        booking: [
+          { icon: '🎟️', label: 'Book Appointment', text: 'How do I book an appointment with Salon Prime?' },
+          { icon: '🕒', label: 'Available Slots', text: 'What are the fastest available booking slots today?' },
+          { icon: '💰', label: 'Pricing & Services', text: 'Tell me about merchant services and pricing tiers.' },
+          { icon: '🔄', label: 'Reschedule Policy', text: 'What is the cancellation and rescheduling policy?' },
+        ],
+        stock: [
+          { icon: '⭐', label: 'Top AI Buy Stocks', text: 'What are the top AI stock buy recommendations today?' },
+          { icon: '🔥', label: 'Lowest Price Ever', text: 'Which companies are trading at their lowest price ever?' },
+          { icon: '🇸🇦', label: 'TASI & SABIC Analysis', text: 'Analyze SABIC (2010.SR) and TASI index technical signals.' },
+          { icon: '⚡', label: 'Unusual Volumes', text: 'Show unusual lower volume alerts and accumulation zones.' },
+        ],
+        real_estate: [
+          { icon: '🏢', label: '11.8% Sukuk Yield', text: 'Explain the 11.8% annual rental dividend yield for Riyadh King Fahd Tower.' },
+          { icon: '💎', label: 'Fractional Ownership', text: 'How does tokenized commercial real estate fractional ownership work?' },
+          { icon: '📊', label: '5-Year IRR Model', text: 'Calculate the projected 5-year IRR and capital appreciation.' },
+          { icon: '📍', label: 'Prime Riyadh Assets', text: 'What Grade-A commercial properties are currently open for investment?' },
+        ],
+        dev_tutor: [
+          { icon: '⚡', label: 'Cloudflare D1 + Workers', text: 'Show me an example of querying Cloudflare D1 in a Worker.' },
+          { icon: '🤖', label: 'PyTorch AI Track', text: 'Explain how to build a deep learning pipeline in PyTorch.' },
+          { icon: '🚀', label: 'Vue 3 State Guide', text: 'Teach me Vue 3 reactive state and component design.' },
+          { icon: '🐞', label: 'Debug My Code', text: 'Can you help me debug and optimize my full-stack web application?' },
+        ],
+      }
     };
   },
   computed: {
@@ -183,6 +224,18 @@ export default {
     }),
     isArabic() {
       return this.locale === 'ar' || (this.$i18n && this.$i18n.locale === 'ar');
+    },
+    currentAssistantObj() {
+      return this.assistantsList.find(a => a.id === this.activeAssistant) || this.assistantsList[0];
+    },
+    currentAssistantTitle() {
+      return this.currentAssistantObj.title;
+    },
+    currentAssistantIcon() {
+      return this.currentAssistantObj.icon;
+    },
+    currentQuickPrompts() {
+      return this.quickPromptsMap[this.activeAssistant] || this.quickPromptsMap.booking;
     }
   },
   watch: {
@@ -207,6 +260,23 @@ export default {
     this.stopListening();
   },
   methods: {
+    selectAssistant(id) {
+      this.activeAssistant = id;
+      const a = this.assistantsList.find(item => item.id === id);
+      if (a) {
+        const welcomeMsg = `Switched to **${a.title}** ${a.icon}. How can I help you?`;
+        this.messages.push({
+          id: Date.now(),
+          sender_id: 9999,
+          message: welcomeMsg,
+          created_at: new Date().toISOString()
+        });
+        this.scrollToBottom();
+        if (this.autoSpeak) {
+          this.speakMessage(welcomeMsg);
+        }
+      }
+    },
     isUserMsg(msg) {
       return msg.sender_id === this.userId && msg.sender_id !== 9999;
     },
@@ -365,7 +435,7 @@ export default {
       this.scrollToBottom();
 
       try {
-        const res = await apiClient.post('chat', { message: userText });
+        const res = await apiClient.post('chat', { message: userText, assistant: this.activeAssistant });
         if (res && res.ai_message) {
           setTimeout(() => {
             this.messages.push(res.ai_message);
@@ -554,6 +624,44 @@ export default {
 }
 .icon-tool-btn:hover, .icon-tool-btn.active {
   background: rgba(255, 255, 255, 0.35);
+}
+
+/* Assistant Switcher Tabs Bar */
+.assistant-tabs-bar {
+  display: flex;
+  background: #0f172a;
+  padding: 4px 6px;
+  gap: 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.assistant-tab-btn {
+  flex: 1;
+  min-width: 78px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.assistant-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.assistant-tab-btn.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.4);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Quick Prompts */

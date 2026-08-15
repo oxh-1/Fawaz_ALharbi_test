@@ -13,7 +13,11 @@ binding = "DB"
 database_name = "fawaz_db"
 database_id = "48bdb38c-e07d-4407-a9c2-33b882b1450f"
 
-# Production environment variables (set secrets via: wrangler secret put JWT_SECRET)
+# Cloudflare Workers AI Binding
+[ai]
+binding = "AI"
+
+# Production environment variables (set secrets via: wrangler secret put JWT_SECRET, wrangler secret put OPENAI_API_KEY)
 [vars]
 APP_NAME = "Fawaz Platform"
 ADMIN_EMAIL = "me@fawazalharbi.dev"

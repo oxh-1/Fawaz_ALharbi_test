@@ -79,6 +79,17 @@ import {
   handleAdminDomainDelete,
 } from './handlers/domain.js';
 
+// AI handlers (Cloudflare AI / OpenAI)
+import {
+  handleAIChat,
+  handleBookingAssistant,
+  handleStockPrediction,
+  handleRealEstateAnalyzer,
+  handleDevTutor,
+  handleChatList,
+  handleChatSend,
+} from './handlers/ai.js';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // URL pattern matching utilities
 // ─────────────────────────────────────────────────────────────────────────────
@@ -159,6 +170,41 @@ export default {
       // POST /api/contact (public — submit form)
       if (method === 'POST' && cleanPath === '/api/contact') {
         return await handleContactSend(request, env);
+      }
+
+      // ── AI Assistants (Cloudflare AI & OpenAI) ─────────────────────────────
+
+      // POST /api/ai/booking-assistant
+      if (method === 'POST' && cleanPath === '/api/ai/booking-assistant') {
+        return await handleBookingAssistant(request, env, authUser);
+      }
+
+      // POST /api/ai/stock-prediction
+      if (method === 'POST' && cleanPath === '/api/ai/stock-prediction') {
+        return await handleStockPrediction(request, env, authUser);
+      }
+
+      // POST /api/ai/real-estate-analyzer
+      if (method === 'POST' && cleanPath === '/api/ai/real-estate-analyzer') {
+        return await handleRealEstateAnalyzer(request, env, authUser);
+      }
+
+      // POST /api/ai/dev-tutor
+      if (method === 'POST' && cleanPath === '/api/ai/dev-tutor') {
+        return await handleDevTutor(request, env, authUser);
+      }
+
+      // POST /api/ai/chat
+      if (method === 'POST' && cleanPath === '/api/ai/chat') {
+        return await handleAIChat(request, env, authUser);
+      }
+
+      // GET /api/chat & POST /api/chat (Live Chat Widget)
+      if (method === 'GET' && cleanPath === '/api/chat') {
+        return await handleChatList(request, env, authUser);
+      }
+      if (method === 'POST' && cleanPath === '/api/chat') {
+        return await handleChatSend(request, env, authUser);
       }
 
       // ── Authenticated Routes ──────────────────────────────────────────────

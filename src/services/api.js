@@ -384,6 +384,17 @@ export const courseApi = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// AI Assistants Service (Cloudflare AI & OpenAI API)
+// ─────────────────────────────────────────────────────────────────────────────
+export const aiApi = {
+  chat:               (data) => apiClient.post('ai/chat', typeof data === 'string' ? { message: data } : data),
+  bookingAssistant:   (data) => apiClient.post('ai/booking-assistant', typeof data === 'string' ? { message: data } : data),
+  stockPrediction:    (data) => apiClient.post('ai/stock-prediction', typeof data === 'string' ? { query: data } : data),
+  realEstateAnalyzer: (data) => apiClient.post('ai/real-estate-analyzer', typeof data === 'string' ? { query: data } : data),
+  devTutor:           (data) => apiClient.post('ai/dev-tutor', typeof data === 'string' ? { question: data } : data),
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Token management helpers (used by store)
 // ─────────────────────────────────────────────────────────────────────────────
 export function setToken(token) {
